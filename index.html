@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JackP Oracle | Decision Intelligence Lab</title>
+    
+    <meta name="description" content="고위험 의사결정 환경에서 선택 신호를 관측하고, 반복되는 패턴이 만드는 결과를 구조 관점에서 해석합니다.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jackp: {
+                            bg: '#050505',
+                            surface: '#121212',
+                            primary: '#8b5cf6', 
+                            light: '#E9D5FF', 
+                            accent: '#a78bfa',
+                        }
+                    },
+                    fontFamily: { sans: ['Inter', 'Noto Sans KR', 'sans-serif'] },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #050505; color: #e5e5e5; overflow-x: hidden; line-height: 1.75; word-break: keep-all; perspective: 1000px; }
+        
+        /* [CORE 3D EFFECT] */
+        .perspective-container {
+            perspective: 1200px;
+            overflow: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            z-index: 0;
+        }
+
+        .grid-floor {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px);
+            background-size: 100px 100px;
+            transform: rotateX(60deg);
+            animation: grid-move 20s linear infinite;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 80%, transparent 100%);
+            opacity: 0.15;
+        }
+
+        @keyframes grid-move {
+            0% { transform: rotateX(60deg) translateY(0); }
+            100% { transform: rotateX(60deg) translateY(100px); }
+        }
+
+        /* 3D Tilt Card */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+        .tilt-content { transform: translateZ(30px); }
+        
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        /* Timeline Animation */
+        .timeline-line-bg {
+            position: absolute;
+            left: 27px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+        @media (min-width: 768px) { .timeline-line-bg { left: 31px; } }
+
+        .timeline-line-progress {
+            position: absolute;
+            left: 27px;
+            top: 0;
+            width: 2px;
+            background: #8b5cf6;
+            box-shadow: 0 0 10px #8b5cf6;
+            height: 0%;
+            z-index: 1;
+            transition: height 0.1s linear;
+        }
+        @media (min-width: 768px) { .timeline-line-progress { left: 31px; } }
+
+        /* Back to Top Button */
+        #back-to-top {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lang-btn { font-size: 0.8rem; font-weight: 700; color: #888; cursor: pointer; transition: color 0.3s; }
+        .lang-btn.active { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #8b5cf6; }
+        
+        #mobile-menu { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
+        #mobile-menu.open { max-height: 500px; opacity: 1; }
+        
+        /* Modal Scroll Custom */
+        .modal-content-scroll::-webkit-scrollbar { width: 6px; }
+        .modal-content-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
+        .modal-content-scroll::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+        .modal-content-scroll::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-jackp-primary selection:text-white">
+
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765531744/logo_uwesei.png" alt="JackP Oracle Symbol" class="h-8 md:h-9 w-auto hover:opacity-90 transition">
+                    <span class="text-white font-bold text-lg md:text-xl tracking-tight">JackP Oracle</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-sm font-medium text-gray-300 hover:text-white transition" data-key="nav_about">About</a>
+                    <a href="#engines" class="text-sm font-medium text-gray-300 hover:text-white transition" data-key="nav_tech">Technology</a>
+                    <a href="#solutions" class="text-sm font-medium text-gray-300 hover:text-white transition" data-key="nav_solutions">Solutions</a>
+                    <a href="mailto:contact@jackporacle.com?subject=Request%20Demo" class="text-sm font-bold text-jackp-primary hover:text-white transition" data-key="nav_demo">Request Demo</a>
+
+                    <div class="flex items-center gap-2 border-l border-white/20 pl-4 ml-2">
+                        <span onclick="setLanguage('ko')" id="btn-ko" class="lang-btn active">KO</span>
+                        <span class="text-gray-600 text-xs">|</span>
+                        <span onclick="setLanguage('en')" id="btn-en" class="lang-btn">EN</span>
+                    </div>
+
+                    <button onclick="toggleModal('login-modal')" class="hidden px-5 py-2 text-sm font-bold text-white border border-jackp-primary rounded-full hover:bg-jackp-primary transition duration-300" data-key="nav_login">Login</button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden bg-black border-b border-white/10">
+            <div class="px-6 py-4 space-y-4 flex flex-col">
+                <a href="#about" onclick="toggleMobileMenu()" class="text-sm font-medium text-gray-300 hover:text-white" data-key="nav_about">About</a>
+                <a href="#engines" onclick="toggleMobileMenu()" class="text-sm font-medium text-gray-300 hover:text-white" data-key="nav_tech">Technology</a>
+                <a href="#solutions" onclick="toggleMobileMenu()" class="text-sm font-medium text-gray-300 hover:text-white" data-key="nav_solutions">Solutions</a>
+                <a href="mailto:contact@jackporacle.com?subject=Request%20Demo" class="text-sm font-bold text-jackp-primary hover:text-white" data-key="nav_demo">Request Demo</a>
+                <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                    <span onclick="setLanguage('ko')" class="lang-btn text-white">KO</span>
+                    <span onclick="setLanguage('en')" class="lang-btn text-gray-500">EN</span>
+                    <button onclick="toggleModal('login-modal'); toggleMobileMenu()" class="hidden text-sm font-bold text-jackp-primary" data-key="nav_login">Login</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen flex items-center pt-36 md:pt-44 pb-20 px-6 overflow-hidden">
+        <div class="perspective-container pointer-events-none">
+            <div class="grid-floor"></div>
+        </div>
+        <canvas id="network-canvas" class="absolute inset-0 w-full h-full z-0 pointer-events-none"></canvas>
+        <div class="absolute inset-0 z-0 pointer-events-none">
+             <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765538746/main_xngumd.png" alt="Background Main" class="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-20 scale-110 object-top">
+            <div class="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-purple-900/40 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-900/20 rounded-full blur-[120px]"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full z-10 relative md:flex items-center justify-between h-full">
+            <div class="md:w-1/2 pl-2 md:pl-4 md:-mt-16" data-aos="fade-right">
+                <div class="mb-8 flex items-center gap-6 animate-float">
+                    <div class="relative w-24 md:w-32 flex-shrink-0">
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765531745/logo_jackporacle_mqkyrx.png" alt="JackP Oracle Full Logo" class="w-full h-full object-contain drop-shadow-[0_0_30px_rgba(139,92,246,0.6)]">
+                    </div>
+                    <div class="h-14 w-[1px] bg-white/20 hidden md:block"></div>
+                    <div class="flex flex-col justify-center">
+                        <span class="text-[#c084fc] font-bold text-sm tracking-wider uppercase mb-1">RESEARCH-DRIVEN</span>
+                        <span class="text-gray-300 text-xs md:text-sm font-light leading-snug" data-key="hero_badge_desc">반응시간·선택 패턴 기반 판단 신호 모델<br>Execution Gap(실행 격차) 관측</span>
+                    </div>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-4 leading-tight text-white break-words animate-float-delayed" style="text-shadow: 0 0 50px rgba(139, 92, 246, 0.3);">
+                    DECIPHERING<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D8B4FE] via-white to-[#E9D5FF] drop-shadow-[0_0_25px_rgba(168,85,247,0.8)]">
+                        THE HUMAN DECISION
+                    </span>
+                </h1>
+
+                <p class="text-xl md:text-2xl text-white font-medium mb-10 leading-relaxed">
+                    <span class="text-jackp-primary font-bold">Human × AI,</span> <span data-key="hero_sub_slogan"> 조합적 승리.<br>
+                    인간의 약점은 AI가 보완하고, AI의 빈틈은 인간이 채웁니다.</span>
+                </p>
+                
+                <div class="border-l-4 border-jackp-primary pl-6 py-2 mb-10 bg-black/40 backdrop-blur-sm rounded-r-xl max-w-2xl">
+                    <p class="text-gray-300 text-sm md:text-base font-light leading-relaxed mb-4">
+                        <span data-key="hero_desc_1">정답을 알려주는 기술은 많습니다.</span><br>
+                        <span data-key="hero_desc_2">그러나 정답을 알고도 실전에서 무너지는 이유 —</span>
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-purple-900/40 border border-purple-500/50 text-purple-200 text-xs md:text-sm font-bold rounded uppercase tracking-wider shadow-[0_0_10px_rgba(168,85,247,0.3)]">Confidence</span>
+                        <span class="px-3 py-1 bg-purple-900/40 border border-purple-500/50 text-purple-200 text-xs md:text-sm font-bold rounded uppercase tracking-wider shadow-[0_0_10px_rgba(168,85,247,0.3)]">Hesitation</span>
+                        <span class="px-3 py-1 bg-purple-900/40 border border-purple-500/50 text-purple-200 text-xs md:text-sm font-bold rounded uppercase tracking-wider shadow-[0_0_10px_rgba(168,85,247,0.3)]">Resilience</span>
+                    </div>
+                    
+                    <p class="text-gray-400 text-sm md:text-base font-light">
+                        <span data-key="hero_desc_4">데이터로 포착하고 실행을 안정화하는 기술은 흔치 않습니다.</span>
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-4">
+                    <a href="#solutions" class="px-8 py-3 bg-jackp-primary hover:bg-purple-600 text-white font-bold rounded-lg transition shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_40px_rgba(139,92,246,0.8)] hover:-translate-y-1" data-key="btn_explore">
+                        Explore Solutions
+                    </a>
+                    <a href="mailto:contact@jackporacle.com?subject=Request%20Demo" class="px-8 py-3 border border-white/20 hover:bg-white/10 text-white font-medium rounded-lg transition backdrop-blur-sm hover:-translate-y-1" data-key="nav_demo">
+                        Request Demo
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hidden md:block md:w-[45%] lg:w-[40%] relative mt-16 md:mt-0" data-aos="fade-left" data-aos-delay="200">
+                <div class="tilt-card group perspective-container relative z-10" style="perspective: 2000px;">
+                    <div class="relative mx-auto border-8 border-gray-800 bg-gray-800 rounded-[3rem] h-[600px] w-[300px] shadow-2xl">
+                        <div class="h-[32px] w-[3px] bg-gray-800 absolute -left-[10px] top-[72px] rounded-l-lg"></div>
+                        <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[10px] top-[124px] rounded-l-lg"></div>
+                        <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[10px] top-[176px] rounded-l-lg"></div>
+                        <div class="h-[64px] w-[3px] bg-gray-800 absolute -right-[10px] top-[142px] rounded-r-lg"></div>
+                        <div class="rounded-[2.5rem] overflow-hidden h-full w-full bg-black tilt-content relative">
+                            <img src="https://placehold.co/300x600/1a1a1a/8b5cf6?text=HoldemDNA+App+Main+Screen" alt="HoldemDNA App Main Screen" class="w-full h-full object-cover scale-105">
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none"></div>
+                        </div>
+                    </div>
+                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[650px] bg-jackp-primary/20 rounded-full blur-[80px] -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 bg-[#0a0a0a] border-t border-white/5 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="md:flex gap-12 items-start" data-aos="fade-up">
+                <div class="md:w-1/3 mb-8 md:mb-0">
+                    <h2 class="text-jackp-primary font-bold tracking-widest text-sm uppercase mb-4" data-key="about_label">Who We Are</h2>
+                    <h3 class="text-3xl font-bold text-white leading-tight mb-8">
+                        Decision<br>Intelligence<br>Lab.
+                    </h3>
+                    <div class="relative tilt-card cursor-pointer group">
+                         <div class="absolute inset-0 bg-purple-900/30 blur-2xl rounded-full group-hover:bg-purple-600/30 transition duration-500"></div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1767698809/What_We_Solve_r9tgh6.png" alt="Brain Data Visualization" class="relative rounded-2xl border border-white/10 w-full max-w-md mx-auto z-10 shadow-2xl tilt-content object-cover scale-110 object-top">
+                    </div>
+                </div>
+                <div class="md:w-2/3 space-y-6 text-gray-400 text-lg leading-relaxed">
+                    <p data-key="about_text_1">JackP Oracle은 고위험 의사결정 환경에서 발생하는 <strong class="text-white">인지편향과 판단 흔들림</strong>을 관측·해석하는 Decision Intelligence Lab입니다.</p>
+                    <p data-key="about_text_2">기존의 전략 도구들이 "수학적 정답(GTO)"을 제공하는 데 집중해왔다면, 우리는 사용자가 그 정답을 실제로 실행하는 과정에서 무너지는 지점을 먼저 봅니다. 핵심 기술인 <strong class="text-white">G‑Tell Detection Engine</strong>은 전략 분석 위에 실시간 행동 신호를 관측하고, 실행 누수가 커지는 구간을 줄여 일관된 실행을 지원합니다.<br><br><span class="text-sm border-l-2 border-white/10 pl-4 py-3 block">G‑Tell은 ‘정답을 알아도 무너지는 순간’을 반응시간·선택 패턴 신호로 포착해 <strong class="text-white">실행 루틴</strong>으로 연결하는 실행 신호 엔진입니다.</span></p>
+                    <p data-key="about_text_3">엔진은 인터페이스 상호작용에서 발생하는 <strong class="text-white">멈춤 시간(dwell time), 클릭 타이밍·패턴</strong> 같은 신호를 바탕으로 의사결정 상태를 해석하고, 필요한 경우 <strong class="text-white">안정화 루틴</strong>과 다음 액션 가이드를 제시합니다.</p>
+                    <p class="text-sm border-l-2 border-white/20 pl-4 text-gray-500 mt-4" data-key="about_text_4">장기적으로 JackP Oracle은 마인드 스포츠에서 축적한 행동 데이터와 AI 기술을 확장하여, Behavioral Finance 기반 트레이딩 심리 분석 및 기업 의사결정 코칭 영역으로 진출합니다.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 glass-panel rounded-xl p-8" data-aos="fade-up" data-aos-delay="100">
+                <div class="md:flex items-center justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <h4 class="text-white font-bold text-lg mb-2" data-key="biz_title">Business Model & Scalability</h4>
+                        <p class="text-gray-400 text-sm max-w-2xl" data-key="biz_desc">JackP Oracle의 주력 제품은 <strong class="text-jackp-light">클라우드 기반 프리미엄 SaaS 구독 모델</strong>과 <strong class="text-jackp-light">B2B 엔터프라이즈 라이선스</strong> 형태로 제공됩니다. 초기에는 마인드 스포츠에서 제품 가치를 검증하고, 이후 e스포츠 및 엔터프라이즈 의사결정 영역으로 적용 범위를 확장합니다.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="px-3 py-1 bg-jackp-primary/20 border border-jackp-primary/40 text-jackp-primary rounded text-xs font-bold">SaaS Subscription</span>
+                        <span class="px-3 py-1 bg-jackp-primary/20 border border-jackp-primary/40 text-jackp-primary rounded text-xs font-bold">Enterprise License</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="engines" class="py-32 bg-black relative overflow-hidden">
+        <div class="perspective-container pointer-events-none opacity-30">
+            <div class="grid-floor" style="animation-direction: reverse;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h2 class="text-jackp-primary font-bold tracking-widest text-sm uppercase mb-3" data-key="tech_label">Core Technology</h2>
+                <h3 class="text-4xl font-black text-white mb-6">5 Engines</h3>
+                <p class="text-gray-400" data-key="tech_desc">반응시간 기반 데이터는 표준화되어 판단 신호로 변환되며, <strong>Execution Gap</strong>을 계산합니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="card-container">
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group cursor-pointer" data-aos="fade-up">
+                    <div class="h-48 bg-gray-900 relative overflow-hidden tilt-content">
+                        <div class="absolute top-4 left-4 bg-jackp-primary/20 text-jackp-primary text-xs font-bold px-3 py-1 rounded-full z-10 backdrop-blur-sm border border-jackp-primary/30">ENGINE 01</div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536215/17.gtoengine_rcwbqf.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="GTO Engine">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h4 class="text-xl font-bold text-white mb-3">GTO Engine (Logic)</h4>
+                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng1_desc">최적 전략의 기준선을 세웁니다. 이 엔진은 실행 붕괴를 측정할 기준선을 제공하기 위한 레이어입니다.</p>
+                        <div class="pt-4 border-t border-white/5 text-xs text-gray-500">
+                            <strong class="text-jackp-primary block mb-1">OUTPUT</strong>
+                            <span data-key="eng1_out">판단의 뼈대가 되는 '기준 플레이 모델'과 비교 프레임.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 bg-gray-900 relative overflow-hidden tilt-content">
+                        <div class="absolute top-4 left-4 bg-jackp-primary/20 text-jackp-primary text-xs font-bold px-3 py-1 rounded-full z-10 backdrop-blur-sm border border-jackp-primary/30">ENGINE 02</div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536215/18.Execution_Engine_g8orb2.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="Execution Engine">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h4 class="text-xl font-bold text-white mb-3">Execution Engine</h4>
+                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng2_desc">"실력 부족"이 아니라 "실행 붕괴"인지 구분해, 흔들리는 지점을 정확히 포착합니다.</p>
+                        <div class="pt-4 border-t border-white/5 text-xs text-gray-500">
+                            <strong class="text-jackp-primary block mb-1">OUTPUT</strong>
+                            <span data-key="eng2_out">망설임, 과열, 위축, 회피 등 실행 붕괴 패턴 관측.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 bg-gray-900 relative overflow-hidden tilt-content">
+                        <div class="absolute top-4 left-4 bg-jackp-primary/20 text-jackp-primary text-xs font-bold px-3 py-1 rounded-full z-10 backdrop-blur-sm border border-jackp-primary/30">ENGINE 03</div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536215/19.Meta-Cognition_Engine_n8jiso.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="Meta-Cognition Engine">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h4 class="text-xl font-bold text-white mb-3">Meta-Cognition Engine</h4>
+                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng3_desc">확신도는 판단 강도를 추정하기 위한 보조 신호입니다. 실력 대비 확신의 차이(Gap)는 개선 우선순위를 보여줍니다.</p>
+                        <div class="pt-4 border-t border-white/5 text-xs text-gray-500">
+                            <strong class="text-jackp-primary block mb-1">OUTPUT</strong>
+                            <span data-key="eng3_out">확신도(0–100) 및 Execution Gap(실행 격차) 점수.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group cursor-pointer" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-48 bg-gray-900 relative overflow-hidden tilt-content">
+                        <div class="absolute top-4 left-4 bg-jackp-primary/20 text-jackp-primary text-xs font-bold px-3 py-1 rounded-full z-10 backdrop-blur-sm border border-jackp-primary/30">ENGINE 04</div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536216/20.Resilience_Engine_syetf6.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="Resilience Engine">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h4 class="text-xl font-bold text-white mb-3">Resilience Engine</h4>
+                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng4_desc">회복은 재현 가능한 프로세스입니다. 실패 이후 흔들림을 줄이고 다음 결정 품질을 안정화합니다.</p>
+                        <div class="pt-4 border-t border-white/5 text-xs text-gray-500">
+                            <strong class="text-jackp-primary block mb-1">OUTPUT</strong>
+                            <span data-key="eng4_out">회복 루틴, 재발 방지 트리거, 안정화 가이드.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group cursor-pointer" data-aos="fade-up" data-aos-delay="400">
+                    <div class="h-48 bg-gray-900 relative overflow-hidden tilt-content">
+                        <div class="absolute top-4 left-4 bg-jackp-primary/20 text-jackp-primary text-xs font-bold px-3 py-1 rounded-full z-10 backdrop-blur-sm border border-jackp-primary/30">ENGINE 05</div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536221/21.Dynamic_Solutions_eahpzg.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="Dynamic Solutions">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h4 class="text-xl font-bold text-white mb-3">Dynamic Solutions</h4>
+                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng5_desc">관측은 끝이 아니라 시작입니다. 이 엔진은 결과를 오늘 적용 가능한 행동 규칙(루틴)으로 전환합니다.</p>
+                        <div class="pt-4 border-t border-white/5 text-xs text-gray-500">
+                            <strong class="text-jackp-primary block mb-1">OUTPUT</strong>
+                            <span data-key="eng5_out">오늘 바로 적용 가능한 행동 지침(루틴, 리스크 컷).</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solutions" class="py-32 bg-jackp-bg border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="mb-16" data-aos="fade-right">
+                <h2 class="text-jackp-primary font-bold tracking-widest text-sm uppercase mb-3" data-key="sol_label">Applied Solutions</h2>
+                <h3 class="text-4xl font-black text-white mb-4">From Lab to Real World</h3>
+                <p class="text-gray-400" data-key="sol_desc">마인드 스포츠에서 검증한 모델을 엔터프라이즈 영역으로 확장합니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group" data-aos="fade-up">
+                    <div class="h-56 bg-gray-800 relative tilt-content">
+                        <div class="absolute top-4 left-4 bg-jackp-primary text-white text-xs font-bold px-3 py-1 rounded-full z-10">LIVE</div>
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765535209/LIVEholdemdna_g7qgsm.png" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 object-top scale-110 md:scale-105" alt="Holdem Table">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h3 class="text-2xl font-bold text-white mb-1">HoldemDNA</h3>
+                        <p class="text-jackp-accent text-sm font-semibold mb-4">Flagship Proof Case</p>
+                        <p class="text-gray-400 text-sm leading-relaxed" data-key="sol_holdem_desc">포커라는 압축된 의사결정 환경에서 판단 신호와 실행 격차를 검증·고도화한 실전형 코칭 시스템입니다. 관측이 실행 루틴 제안으로 이어지도록 설계했습니다.</p>
+                    </div>
+                </div>
+                
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-56 bg-gray-800 relative tilt-content">
+                        <div class="absolute top-4 left-4 bg-purple-900 text-purple-200 text-xs font-bold px-3 py-1 rounded-full z-10">R&D</div>
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 object-top scale-110 md:scale-105" alt="Esports">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h3 class="text-2xl font-bold text-white mb-1">EsportsDNA</h3>
+                        <p class="text-jackp-accent text-sm font-semibold mb-4">R&D Expansion</p>
+                        <p class="text-gray-400 text-sm leading-relaxed" data-key="sol_esports_desc">0.1초의 승부. 고압 상황에서의 판단 속도와 확신을 분석하여 프로 팀과 선수의 퍼포먼스를 최적화합니다. 현재 실시간 환경에 맞춘 지표 재설계 단계입니다.</p>
+                    </div>
+                </div>
+
+                <div class="tilt-card glass-panel rounded-2xl overflow-hidden group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-56 bg-gray-800 relative tilt-content">
+                        <div class="absolute top-4 left-4 bg-gray-700 text-gray-300 text-xs font-bold px-3 py-1 rounded-full z-10">VISION</div>
+                        <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 object-top scale-110 md:scale-105" alt="Corporate">
+                    </div>
+                    <div class="p-8 tilt-content">
+                        <h3 class="text-2xl font-bold text-white mb-1">Corporate Oracle</h3>
+                        <p class="text-jackp-accent text-sm font-semibold mb-4">Enterprise B2B Vision</p>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4" data-key="sol_corp_desc_1">리더의 결정-실행 격차를 줄이고, 금융 리스크 관리 및 임원 코칭으로 확장하는 비전입니다.</p>
+                        <p class="text-gray-500 text-xs leading-relaxed border-t border-white/5 pt-4" data-key="sol_corp_desc_2">우리는 규제 리스크를 최소화하고 실증을 가속하기 위해 금융규제 샌드박스 등 제도적 트랙을 활용한 단계적 PoC를 추진합니다. 이는 장기적으로 RegTech 준수 솔루션으로서의 가치를 뒷받침합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<section class="py-32 bg-black">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-4xl font-bold mb-16 text-white">Leadership</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                <div class="glass-panel p-8 rounded-2xl tilt-card" data-aos="fade-up">
+                    <div class="flex items-start gap-6 mb-6">
+                        <div class="w-32 h-40 rounded-2xl overflow-hidden border border-white/10 bg-white/5 flex-shrink-0 relative shadow-inner">
+                            <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/w_600,q_auto,f_auto/v1765811277/Gemini_Generated_Image_2pu9is2pu9is2pu9_mnkjjr.jpg" alt="CEO" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white" data-key="leader_1_name">Jeon Jong-kook</h3>
+                            <span class="text-jackp-primary font-bold text-sm block mb-1" data-key="leader_1_role">CEO</span>
+                            <span class="text-xs text-gray-500" data-key="leader_1_spec">Global Strategy & Execution</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4" data-key="leader_jeon_1">M&A 성공 경험과 글로벌 기업 환경에서의 리더십을 기반으로 JackP Oracle의 비즈니스 구조와 확장을 총괄합니다.</p>
+                    <p class="text-gray-400 text-sm leading-relaxed" data-key="leader_jeon_2">국내외 기업의 경영진으로서 조직 성장과 사업 구조화를 주도해 왔으며, 기술을 "기능"으로 끝내지 않고 시장과 사업으로 완성하는 실행 전략을 책임집니다.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-2xl tilt-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-start gap-6 mb-6">
+                        <div class="w-32 h-40 rounded-2xl overflow-hidden border border-white/10 bg-white/5 flex-shrink-0 relative shadow-inner">
+                            <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/w_600,q_auto,f_auto/v1765811277/Gemini_Generated_Image_1z9jx71z9jx71z9j_msskfk.jpg" alt="CPO" class="w-full h-full object-cover object-top hover:scale-105 transition duration-500">
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white" data-key="leader_2_name">Chun Hee-sun</h3>
+                            <span class="text-jackp-primary font-bold text-sm block mb-1" data-key="leader_2_role">CPO & Head of R&D</span>
+                            <span class="text-xs text-gray-500" data-key="leader_2_spec">Product Architecture & UX</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4" data-key="leader_chun_1">25년의 제조업 현장 경험과 대규모 조직 운영 기획, 그리고 CX(고객경험) 역량을 기반으로 제품과 연구를 총괄합니다.</p>
+                    <p class="text-gray-400 text-sm leading-relaxed" data-key="leader_chun_2">제조업의 품질 기준과 시스템 사고를 바탕으로, 화려한 문구보다 사용자가 실제로 따라갈 수 있는 관측–피드백 구조를 설계합니다.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-8 md:p-12 rounded-2xl border border-white/10 bg-white/5 relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                    <svg class="w-24 h-24 text-jackp-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 13.1216 16 12.017 16H9C9.00012 13.1784 11.3185 11.0664 12.8711 11.2337L13.8824 11.3427L13.6664 9.33682C11.5947 9.11364 8.99988 11.4589 8.99988 16H8C6.89543 16 6 16.8954 6 18V21H14.017ZM21 21L21 18C21 16.8954 20.1046 16 19 16H15.983C15.9831 13.1784 18.3014 11.0664 19.854 11.2337L20.8653 11.3427L20.6493 9.33682C18.5776 9.11364 15.9828 11.4589 15.9828 16H15C13.8954 16 13 16.8954 13 18V21H21Z"/></svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-white mb-8 border-l-4 border-jackp-primary pl-4" data-key="ceo_msg_title">CEO 인사말</h3>
+                <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line text-sm md:text-base max-w-4xl" data-key="ceo_msg_body">안녕하세요.<br>
+<br>
+JackP Oracle 대표이사 전종국입니다.<br>
+저는 경제학을 전공하며, 전통 경제학이 전제하는 ‘합리적 인간’ 모델이 현실의 선택과 판단을 충분히 설명하지 못한다는 한계를 지속적으로 느껴왔습니다.<br>
+<br>
+현실의 사람은 언제나 최적의 선택을 하지 않습니다. 그리고 더 중요한 것은, 왜 그 선택을 했는지, 어떤 조건에서 어떤 근거로 판단이 굳어졌는지를 스스로도 명확히 설명하지 못하는 경우가 많다는 점입니다.<br>
+<br>
+JackP Oracle은 사람을 평가하거나 바꾸려는 조직이 아닙니다.<br>
+대신 사람이 결정을 내리는 환경, 선택을 유도하는 조건, 그리고 반복될 때 결과를 만들어내는 구조를 연구합니다.<br>
+<br>
+손실회피, 확증편향, 과잉확신 같은 인지편향은 개인의 의지나 경험만으로 쉽게 사라지지 않습니다.<br>
+그래서 우리는 사람을 바꾸기보다, 사람이 판단하게 되는 구조 자체를 더 잘 이해하고 설계하는 방식을 선택했습니다.<br>
+<br>
+이 연구를 진행하며 우리는 결과만이 아니라, 결정 순간의 판단 강도와 흔들림 같은 신호도 함께 관측할 필요가 있다고 보았습니다.<br>
+이를 돕기 위해 내부적으로 여러 지표를 설계해 왔고, 그중 하나가 확신도(Confidence Index)입니다.<br>
+이는 “자신감이 높다/낮다”를 단정하기 위한 것이 아니라, 특정 조건에서 판단이 과도하게 단단해지거나 반대로 급격히 흔들리는 패턴이 있는지를 더 정밀하게 보기 위한 보조 지표입니다.<br>
+<br>
+관련 산출 방식과 적용 구조는 특허 출원을 진행 중이며, 서비스 환경에서의 유효성을 계속 검증하고 있습니다.<br>
+<br>
+이 연구의 첫 번째 적용 사례가 HoldemDNA입니다.<br>
+HoldemDNA는 포커라는 고밀도의 의사결정 환경에서 판단 패턴을 관측하고, 그 결과를 카드와 리포트라는 형태로 구현한 프로젝트입니다.<br>
+<br>
+JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다.<br>
+앞으로도 우리는 사람들이 어떤 환경에서 어떤 선택을 하게 되는지, 그리고 그 반복이 어떤 결과를 구조적으로 만들어내는지를 더 정확하게 연구하고 설계해 나가겠습니다.<br>
+<br>
+감사합니다.<br>
+<br>
+대표이사<br>
+전종국</div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="journey" class="py-32 bg-jackp-bg relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=1920&auto=format&fit=crop" alt="History Background" class="w-full h-full object-cover opacity-10">
+            <div class="absolute inset-0 bg-gradient-to-b from-black via-jackp-bg/90 to-black"></div>
+        </div>
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <h2 class="text-jackp-primary font-bold tracking-widest text-sm uppercase mb-3" data-key="history_label">History & Vision</h2>
+            <h3 class="text-4xl font-black text-white mb-6">Research Journey</h3>
+            
+            <p class="text-gray-400 text-lg mb-16 max-w-3xl" data-key="history_intro">Since 2023, we have been building decision engines that change real execution.<br>단기간 기능 추가가 아니라, 가설–검증–고도화의 반복으로 실행 격차(Execution Gap) 모델을 축적해 왔습니다.</p>
+            
+            <div class="relative pl-2 md:ml-0" id="timeline-container">
+                <div class="timeline-line-bg"></div>
+                <div class="timeline-line-progress" id="timeline-progress"></div>
+
+                <div class="space-y-16">
+                    <div class="relative pl-12 group tilt-card" data-aos="fade-right">
+                        <div class="absolute -left-[11px] top-2 w-5 h-5 bg-black border-4 border-jackp-primary rounded-full box-shadow-[0_0_10px_rgba(139,92,246,0.8)] z-10"></div>
+                        <div class="md:flex gap-6 tilt-content">
+                            <div class="md:w-32 flex-shrink-0"><span class="text-3xl font-bold text-white">2023-24</span><br><span class="text-xs text-jackp-primary font-bold">INCUBATION</span></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white mb-2" data-key="hist_1_title">연구 시작 · 가설 정립</h4>
+                                <p class="text-gray-400 text-sm" data-key="hist_1_desc">Execution Gap 개념 정의, 메타인지 분석 프레임 설계.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative pl-12 group tilt-card" data-aos="fade-right" data-aos-delay="100">
+                        <div class="absolute -left-[11px] top-2 w-5 h-5 bg-black border-4 border-jackp-primary rounded-full box-shadow-[0_0_10px_rgba(139,92,246,0.8)] z-10"></div>
+                        <div class="md:flex gap-6 tilt-content">
+                            <div class="md:w-32 flex-shrink-0"><span class="text-3xl font-bold text-white">2025</span><br><span class="text-xs text-jackp-primary font-bold">VERIFICATION</span></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white mb-2" data-key="hist_2_title">프로토타입 · 검증</h4>
+                                <p class="text-gray-400 text-sm" data-key="hist_2_desc">핵심 엔진 구현 및 실제 행동 붕괴 패턴 검증. 관측 결과를 실행 가이드(루틴)로 연결하는 구조 고도화.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative pl-12 group tilt-card" data-aos="fade-right" data-aos-delay="200">
+                        <div class="absolute -left-[11px] top-2 w-5 h-5 bg-black border-4 border-gray-600 rounded-full z-10 bg-gray-900 group-hover:border-jackp-primary transition-colors duration-300"></div>
+                        <div class="md:flex gap-6 tilt-content">
+                            <div class="md:w-32 flex-shrink-0"><span class="text-3xl font-bold text-gray-400 group-hover:text-white transition-colors">2026</span><br><span class="text-xs text-gray-500 font-bold">LAUNCH</span></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white mb-2" data-key="hist_3_title">상용화 · 확장 준비</h4>
+                                <p class="text-gray-400 text-sm" data-key="hist_3_desc">플래그십 케이스(HoldemDNA) 완성도 제고, Esports/Enterprise 확장 기반 구축.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative pl-12 group tilt-card" data-aos="fade-right" data-aos-delay="300">
+                        <div class="absolute -left-[11px] top-2 w-5 h-5 bg-black border-4 border-gray-700 rounded-full z-10 bg-gray-900 group-hover:border-jackp-primary transition-colors duration-300"></div>
+                        <div class="md:flex gap-6 tilt-content">
+                            <div class="md:w-32 flex-shrink-0"><span class="text-3xl font-bold text-gray-600 group-hover:text-white transition-colors">2027+</span><br><span class="text-xs text-gray-600 font-bold">EXPANSION</span></div>
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-300 mb-2" data-key="hist_4_title">Global Scale</h4>
+                                <p class="text-gray-500 text-sm" data-key="hist_4_desc">산업별 PoC 및 파트너십을 통한 엔진 확장.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 relative overflow-hidden text-center px-6 bg-black">
+         <div class="absolute inset-0 z-0">
+            <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1767698809/What_We_Solve_r9tgh6.png" alt="What We Solve" class="w-full h-full object-cover opacity-20 object-top scale-110">
+             <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-black/80"></div>
+        </div>
+        <div class="max-w-4xl mx-auto relative z-10" data-aos="zoom-in">
+            <blockquote class="text-2xl md:text-3xl font-serif italic text-white leading-relaxed mb-6" data-key="philosophy_quote">"정답이 아니라 해결책을 준다.<br>평가가 아니라 지지를 한다.<br>기술을 팔지만 사람을 남긴다."</blockquote>
+            <p class="text-xs text-jackp-primary font-bold uppercase">JackP Oracle Philosophy</p>
+        </div>
+    </section>
+
+    <section class="py-24 bg-black">
+        <div class="max-w-3xl mx-auto px-6 mb-20">
+            <h2 class="text-3xl font-bold text-center mb-12 text-white">FAQ</h2>
+            <div class="space-y-6">
+                <div class="border-b border-white/10 pb-6">
+                    <h4 class="font-bold text-white mb-2" data-key="faq_1_q">Q. JackP Oracle의 차별점은 무엇인가요?</h4>
+                    <p class="text-gray-400 text-sm" data-key="faq_1_a">정답(전략)을 제공하는 것을 넘어, 정답을 알고도 무너지는 지점을 반응시간·선택 패턴 같은 신호로 포착하고 실행 루틴으로 연결합니다.</p>
+                </div>
+                <div class="border-b border-white/10 pb-6">
+                    <h4 class="font-bold text-white mb-2" data-key="faq_2_q">Q. 판단 신호(Confidence/Execution Gap)는 어떻게 산출하나요?</h4>
+                    <p class="text-gray-400 text-sm" data-key="faq_2_a">반응시간·선택 패턴 등 여러 신호를 결합해 판단 강도를 추정하고, 개인의 기준선과 비교해 Execution Gap을 계산합니다. 결과는 점수뿐 아니라 실행 루틴 제안과 함께 제공됩니다.</p>
+                </div>
+                <div class="border-b border-white/10 pb-6">
+                    <h4 class="font-bold text-white mb-2" data-key="faq_3_q">Q. 도박/베팅과 관련이 있나요?</h4>
+                    <p class="text-gray-400 text-sm" data-key="faq_3_a">아닙니다. 베팅·중개·승부 예측 서비스를 제공하지 않습니다. 행동·메타인지 관측 기반 코칭/피드백 솔루션입니다.</p>
+                </div>
+                <div class="border-b border-white/10 pb-6">
+                    <h4 class="font-bold text-white mb-2" data-key="faq_4_q">Q. B2B PoC/제휴는 어떤 방식으로 진행하나요?</h4>
+                    <p class="text-gray-400 text-sm" data-key="faq_4_a">산업별 목표 지표와 데이터 환경을 정의한 뒤, 파일럿 기간 동안 엔진을 적용해 Execution Gap 개선 효과를 검증합니다.</p>
+                </div>
+                <div class="border-b border-white/10 pb-6">
+                    <h4 class="font-bold text-white mb-2" data-key="faq_5_q">Q. 데이터는 어떻게 다루나요?</h4>
+                    <p class="text-gray-400 text-sm" data-key="faq_5_a">최소 수집·목적 제한 원칙을 준수합니다. 개인 식별 정보와 행동 데이터는 엄격하게 분리되어 처리됩니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="max-w-7xl mx-auto px-6 border-t border-white/10 pt-12">
+            <div class="md:flex justify-between items-center mb-8">
+                <div class="flex items-center gap-3 mb-4 md:mb-0">
+                    <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765531744/logo_uwesei.png" alt="JackP Oracle Symbol" class="h-8 w-auto">
+                    <span class="text-white font-bold text-xl tracking-tight">JackP Oracle</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-500 text-sm" data-key="footer_addr">서울특별시 강서구 마곡중앙6로 11 (마곡동 보타닉파크타워 3) 313-32호 | contact@jackporacle.com</p>
+                </div>
+            </div>
+            <div class="text-xs text-gray-600 flex justify-between">
+                <p data-key="footer_copyright">© 2026 주식회사 잭피오라클 (JackP Oracle Co., Ltd.)</p>
+                <div class="space-x-4">
+                    <span class="cursor-pointer hover:text-white" onclick="toggleModal('privacy-modal')">Privacy</span>
+                    <span class="cursor-pointer hover:text-white" onclick="toggleModal('privacy-modal')">Terms</span>
+                    <span class="cursor-pointer hover:text-white" onclick="toggleModal('privacy-modal')">Ethics</span>
+                </div>
+            </div>
+        </footer>
+    </section>
+
+    <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 bg-jackp-primary hover:bg-purple-600 text-white p-3 rounded-full shadow-lg z-50 transform hover:-translate-y-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+    </button>
+
+    <div id="login-modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="modal-overlay absolute w-full h-full bg-black opacity-80" onclick="toggleModal('login-modal')"></div>
+        <div class="modal-container bg-[#1a1a1a] w-11/12 md:max-w-md mx-auto rounded-2xl shadow-2xl z-50 overflow-y-auto border border-jackp-primary/30">
+            <div class="absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50" onclick="toggleModal('login-modal')"><svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path></svg></div>
+            <div class="modal-content py-8 text-left px-8">
+                <div class="flex justify-center mb-6"><img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765531744/logo_uwesei.png" class="h-16"></div>
+                <h3 class="text-2xl font-bold text-center text-white mb-6">Login to Oracle</h3>
+                <form onsubmit="event.preventDefault(); alert('데모 버전입니다.'); toggleModal('login-modal');">
+                    <div class="mb-4"><label class="block text-gray-400 text-sm font-bold mb-2" for="email">Email</label><input class="w-full bg-[#0a0a0a] text-white border border-gray-700 rounded py-3 px-4 focus:outline-none focus:border-jackp-primary" id="email" type="email" placeholder="email@example.com"></div>
+                    <div class="mb-6"><label class="block text-gray-400 text-sm font-bold mb-2" for="password">Password</label><input class="w-full bg-[#0a0a0a] text-white border border-gray-700 rounded py-3 px-4 focus:outline-none focus:border-jackp-primary" id="password" type="password" placeholder="********"></div>
+                    <button class="w-full bg-jackp-primary hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300">Sign In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="privacy-modal" class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="modal-overlay absolute w-full h-full bg-black opacity-80" onclick="toggleModal('privacy-modal')"></div>
+        <div class="modal-container bg-[#1a1a1a] w-11/12 md:max-w-md mx-auto rounded-2xl shadow-2xl z-50 overflow-y-auto border border-white/10">
+            <div class="modal-content py-8 text-center px-8">
+                <div class="mb-4 text-4xl">⚖️</div>
+                <h3 class="text-xl font-bold text-white mb-2">Legal Notice</h3>
+                <p class="text-gray-400 text-sm mb-6">현재 법인 설립 절차가 진행 중입니다.<br>이용약관 및 개인정보처리방침은 곧 업데이트될 예정입니다.</p>
+                <button onclick="toggleModal('privacy-modal')" class="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-bold rounded-lg transition">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+
+        function toggleModal(modalID){
+            const modal = document.getElementById(modalID);
+            if(modal) {
+                modal.classList.toggle('opacity-0');
+                modal.classList.toggle('pointer-events-none');
+                document.body.classList.toggle('modal-active');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('open');
+        }
+
+        // --- [PARTICLE NETWORK ANIMATION] ---
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = canvas.parentElement.offsetWidth;
+            height = canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const mouse = { x: null, y: null, radius: 150 };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.dx = (Math.random() - 0.5) * 0.5;
+                this.dy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+                if (this.x < 0 || this.x > width) this.dx *= -1;
+                if (this.y < 0 || this.y > height) this.dy *= -1;
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                     const angle = Math.atan2(dy, dx);
+                     this.x -= Math.cos(angle) * 1;
+                     this.y -= Math.sin(angle) * 1;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(139, 92, 246, 0.7)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 15000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${1 - distance/120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        // --- [TILT CARD LOGIC] ---
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.tilt-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                if (e.clientX > rect.left - 50 && e.clientX < rect.right + 50 && e.clientY > rect.top - 50 && e.clientY < rect.bottom + 50) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -12;
+                    const rotateY = ((x - centerX) / centerX) * 12;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                } else {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                }
+            });
+        });
+
+        // --- [SCROLL LOGIC] ---
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            
+            // 1. Back to Top Button
+            const backToTopBtn = document.getElementById('back-to-top');
+            if (scrollY > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+
+            // 2. Timeline Progress
+            const timelineContainer = document.getElementById('timeline-container');
+            const timelineProgress = document.getElementById('timeline-progress');
+            
+            if (timelineContainer && timelineProgress) {
+                const rect = timelineContainer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    const totalHeight = rect.height;
+                    const visibleHeight = windowHeight - rect.top;
+                    let percentage = (visibleHeight / totalHeight) * 100;
+                    percentage = Math.max(0, Math.min(100, percentage));
+                    timelineProgress.style.height = `${percentage}%`;
+                }
+            }
+        });
+
+        const translations = {
+            ko: {
+                nav_about: "About",
+                nav_tech: "Technology",
+                nav_solutions: "Solutions",
+                nav_journey: "Journey",
+                nav_login: "Login",
+                nav_demo: "Request Demo",
+                hero_badge_desc: "반응시간·선택 패턴 기반 판단 신호 모델<br>Execution Gap(실행 격차) 관측",
+                hero_sub_slogan: "조합적 승리.<br>인간의 약점은 AI가 보완하고, AI의 빈틈은 인간이 채웁니다.",
+                hero_desc_1: "정답을 알려주는 기술은 많습니다.",
+                hero_desc_2: "그러나 정답을 알고도 실전에서 무너지는 이유 —",
+                hero_desc_4: "데이터로 포착하고 실행을 안정화하는 기술은 흔치 않습니다.",
+                btn_explore: "Explore Solutions",
+                btn_learn: "Learn More",
+                about_label: "Who We Are",
+                about_text_1: "JackP Oracle은 고위험 의사결정 환경에서 발생하는 <strong class=\"text-white\">인지편향과 판단 흔들림</strong>을 관측·해석하는 Decision Intelligence Lab입니다.",
+                about_text_2: "기존의 전략 도구들이 \"수학적 정답(GTO)\"을 제공하는 데 집중해왔다면, 우리는 사용자가 그 정답을 실제로 실행하는 과정에서 무너지는 지점을 먼저 봅니다. 핵심 기술인 <strong class=\"text-white\">G‑Tell Detection Engine</strong>은 전략 분석 위에 실시간 행동 신호를 관측하고, 실행 누수가 커지는 구간을 줄여 일관된 실행을 지원합니다.<br><br><span class=\"text-sm border-l-2 border-white/10 pl-4 py-3 block\">G‑Tell은 ‘정답을 알아도 무너지는 순간’을 반응시간·선택 패턴 신호로 포착해 <strong class=\"text-white\">실행 루틴</strong>으로 연결하는 실행 신호 엔진입니다.</span>",
+                about_text_3: "엔진은 인터페이스 상호작용에서 발생하는 <strong class=\"text-white\">멈춤 시간(dwell time), 클릭 타이밍·패턴</strong> 같은 신호를 바탕으로 의사결정 상태를 해석하고, 필요한 경우 <strong class=\"text-white\">안정화 루틴</strong>과 다음 액션 가이드를 제시합니다.",
+                about_text_4: "장기적으로 JackP Oracle은 마인드 스포츠에서 축적한 행동 데이터와 AI 기술을 확장하여, Behavioral Finance 기반 트레이딩 심리 분석 및 기업 의사결정 코칭 영역으로 진출합니다.",
+                biz_title: "Business Model & Scalability",
+                biz_desc: "JackP Oracle의 주력 제품은 <strong class='text-jackp-light'>클라우드 기반 프리미엄 SaaS 구독 모델</strong>과 <strong class='text-jackp-light'>B2B 엔터프라이즈 라이선스</strong> 형태로 제공됩니다. 초기에는 마인드 스포츠에서 제품 가치를 검증하고, 이후 e스포츠 및 엔터프라이즈 의사결정 영역으로 적용 범위를 확장합니다.",
+                tech_label: "Core Technology",
+                tech_desc: "반응시간 기반 데이터는 표준화되어 판단 신호로 변환되며, <strong>Execution Gap</strong>을 계산합니다.",
+                eng1_desc: "최적 전략의 기준선을 세웁니다. 이 엔진은 실행 붕괴를 측정할 기준선을 제공하기 위한 레이어입니다.",
+                eng1_out: "판단의 뼈대가 되는 '기준 플레이 모델'과 비교 프레임.",
+                eng2_desc: "\"실력 부족\"이 아니라 \"실행 붕괴\"인지 구분해, 흔들리는 지점을 정확히 포착합니다.",
+                eng2_out: "망설임, 과열, 위축, 회피 등 실행 붕괴 패턴 관측.",
+                eng3_desc: "확신도는 판단 강도를 추정하기 위한 보조 신호입니다. 실력 대비 확신의 차이(Gap)는 개선 우선순위를 보여줍니다.",
+                eng3_out: "확신도(0–100) 및 Execution Gap(실행 격차) 점수.",
+                eng4_desc: "회복은 재현 가능한 프로세스입니다. 실패 이후 흔들림을 줄이고 다음 결정 품질을 안정화합니다.",
+                eng4_out: "회복 루틴, 재발 방지 트리거, 안정화 가이드.",
+                eng5_desc: "관측은 끝이 아니라 시작입니다. 이 엔진은 결과를 오늘 적용 가능한 행동 규칙(루틴)으로 전환합니다.",
+                eng5_out: "오늘 바로 적용 가능한 행동 지침(루틴, 리스크 컷).",
+                sol_label: "Applied Solutions",
+                sol_desc: "마인드 스포츠에서 검증한 모델을 엔터프라이즈 영역으로 확장합니다.",
+                sol_holdem_desc: "포커라는 압축된 의사결정 환경에서 판단 신호와 실행 격차를 검증·고도화한 실전형 코칭 시스템입니다. 관측이 실행 루틴 제안으로 이어지도록 설계했습니다.",
+                sol_esports_desc: "0.1초의 승부. 고압 상황에서의 판단 속도와 확신을 분석하여 프로 팀과 선수의 퍼포먼스를 최적화합니다. 현재 실시간 환경에 맞춘 지표 재설계 단계입니다.",
+                sol_corp_desc_1: "리더의 결정-실행 격차를 줄이고, 금융 리스크 관리 및 임원 코칭으로 확장하는 비전입니다.",
+                sol_corp_desc_2: "우리는 규제 리스크를 최소화하고 실증을 가속하기 위해 금융규제 샌드박스 등 제도적 트랙을 활용한 단계적 PoC를 추진합니다. 이는 장기적으로 RegTech 준수 솔루션으로서의 가치를 뒷받침합니다.",
+                
+                // [Leadership Section - Korean]
+                leader_1_name: "Jeon Jong-kook",
+                leader_1_role: "CEO",
+                leader_1_spec: "Global Strategy & Execution",
+                leader_jeon_1: "M&A 성공 경험과 글로벌 기업 환경에서의 리더십을 기반으로 JackP Oracle의 비즈니스 구조와 확장을 총괄합니다.",
+                leader_jeon_2: "국내외 기업의 경영진으로서 조직 성장과 사업 구조화를 주도해 왔으며, 기술을 \"기능\"으로 끝내지 않고 시장과 사업으로 완성하는 실행 전략을 책임집니다.",
+                
+                leader_2_name: "Chun Hee-sun",
+                leader_2_role: "CPO & Head of R&D",
+                leader_2_spec: "Product Architecture & UX",
+                leader_chun_1: "25년의 제조업 현장 경험과 대규모 조직 운영 기획, 그리고 CX(고객경험) 역량을 기반으로 제품과 연구를 총괄합니다.",
+                leader_chun_2: "제조업의 품질 기준과 시스템 사고를 바탕으로, 화려한 문구보다 사용자가 실제로 따라갈 수 있는 관측–피드백 구조를 설계합니다.",
+                
+                // [CEO Message - Inline]
+                ceo_msg_title: "CEO 인사말",
+                ceo_msg_body: `안녕하세요.
+
+JackP Oracle 대표이사 전종국입니다.
+저는 경제학을 전공하며, 전통 경제학이 전제하는 ‘합리적 인간’ 모델이 현실의 선택과 판단을 충분히 설명하지 못한다는 한계를 지속적으로 느껴왔습니다.
+
+현실의 사람은 언제나 최적의 선택을 하지 않습니다. 그리고 더 중요한 것은, 왜 그 선택을 했는지, 어떤 조건에서 어떤 근거로 판단이 굳어졌는지를 스스로도 명확히 설명하지 못하는 경우가 많다는 점입니다.
+
+JackP Oracle은 사람을 평가하거나 바꾸려는 조직이 아닙니다.
+대신 사람이 결정을 내리는 환경, 선택을 유도하는 조건, 그리고 반복될 때 결과를 만들어내는 구조를 연구합니다.
+
+손실회피, 확증편향, 과잉확신 같은 인지편향은 개인의 의지나 경험만으로 쉽게 사라지지 않습니다.
+그래서 우리는 사람을 바꾸기보다, 사람이 판단하게 되는 구조 자체를 더 잘 이해하고 설계하는 방식을 선택했습니다.
+
+이 연구를 진행하며 우리는 결과만이 아니라, 결정 순간의 판단 강도와 흔들림 같은 신호도 함께 관측할 필요가 있다고 보았습니다.
+이를 돕기 위해 내부적으로 여러 지표를 설계해 왔고, 그중 하나가 확신도(Confidence Index)입니다.
+이는 “자신감이 높다/낮다”를 단정하기 위한 것이 아니라, 특정 조건에서 판단이 과도하게 단단해지거나 반대로 급격히 흔들리는 패턴이 있는지를 더 정밀하게 보기 위한 보조 지표입니다.
+
+관련 산출 방식과 적용 구조는 특허 출원을 진행 중이며, 서비스 환경에서의 유효성을 계속 검증하고 있습니다.
+
+이 연구의 첫 번째 적용 사례가 HoldemDNA입니다.
+HoldemDNA는 포커라는 고밀도의 의사결정 환경에서 판단 패턴을 관측하고, 그 결과를 카드와 리포트라는 형태로 구현한 프로젝트입니다.
+
+JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다.
+앞으로도 우리는 사람들이 어떤 환경에서 어떤 선택을 하게 되는지, 그리고 그 반복이 어떤 결과를 구조적으로 만들어내는지를 더 정확하게 연구하고 설계해 나가겠습니다.
+
+감사합니다.
+
+대표이사
+전종국`,
+
+                history_label: "History & Vision",
+                history_intro: "Since 2023, we have been building decision engines that change real execution.<br>단기간 기능 추가가 아니라, 가설–검증–고도화의 반복으로 실행 격차(Execution Gap) 모델을 축적해 왔습니다.",
+                hist_1_title: "Inception · Hypothesis",
+                hist_1_desc: "Definition of Execution Gap concept, design of meta-cognition analysis frame.",
+                hist_2_title: "Prototype · Verification",
+                hist_2_desc: "핵심 엔진 구현 및 실제 행동 붕괴 패턴 검증. 관측 결과를 실행 가이드(루틴)로 연결하는 구조 고도화.",
+                hist_3_title: "Commercialization · Prep",
+                hist_3_desc: "Enhancement of flagship case (HoldemDNA), establishing foundation for Esports/Enterprise expansion.",
+                hist_4_title: "Global Scale",
+                hist_4_desc: "Engine expansion through industry-specific PoCs and partnerships.",
+                philosophy_quote: "\"We give solutions, not just answers.<br>We support, not just evaluate.<br>We sell technology, but leave people behind.\"",
+                faq_1_q: "Q. JackP Oracle의 차별점은 무엇인가요?",
+                faq_1_a: "정답(전략)을 제공하는 것을 넘어, 정답을 알고도 무너지는 지점을 반응시간·선택 패턴 같은 신호로 포착하고 실행 루틴으로 연결합니다.",
+                faq_2_q: "Q. 판단 신호(Confidence/Execution Gap)는 어떻게 산출하나요?",
+                faq_2_a: "반응시간·선택 패턴 등 여러 신호를 결합해 판단 강도를 추정하고, 개인의 기준선과 비교해 Execution Gap을 계산합니다. 결과는 점수뿐 아니라 실행 루틴 제안과 함께 제공됩니다.",
+                faq_3_q: "Q. Is it related to gambling/betting?",
+                faq_3_a: "아닙니다. 베팅·중개·승부 예측 서비스를 제공하지 않습니다. 행동·메타인지 관측 기반 코칭/피드백 솔루션입니다.",
+                faq_4_q: "Q. How are B2B PoC/Partnerships conducted?",
+                faq_4_a: "After defining industry-specific target indicators and data environments, we verify the Execution Gap improvement effect by applying the engine during the pilot period.",
+                faq_5_q: "Q. How is data handled?",
+                faq_5_a: "We adhere to principles of minimum collection and purpose limitation. Personal identification information and behavioral data are strictly separated and processed.",
+                
+                // [Footer]
+                footer_addr: "서울특별시 강서구 마곡중앙6로 11 (마곡동 보타닉파크타워 3) 313-32호 | contact@jackporacle.com",
+                footer_copyright: "© 2026 주식회사 잭피오라클 (JackP Oracle Co., Ltd.)"
+            },
+            en: {
+                nav_about: "About",
+                nav_tech: "Technology",
+                nav_solutions: "Solutions",
+                nav_journey: "Journey",
+                nav_login: "Login",
+                nav_demo: "Request Demo",
+                hero_badge_desc: "A decision-signal model based on reaction time and choice patterns<br>Observing the Execution Gap",
+                hero_sub_slogan: "Combinatorial Victory.<br>AI compensates for human weaknesses, and humans fill the gaps of AI.",
+                hero_desc_1: "There are many technologies that give you the right answer.",
+                hero_desc_2: "But why do we crumble in practice even when we know the answer? —",
+                hero_desc_4: "Technologies that capture this with data and stabilize execution are rare.",
+                btn_explore: "Explore Solutions",
+                btn_learn: "Learn More",
+                about_label: "Who We Are",
+                about_text_1: "JackP Oracle is a Decision Intelligence Lab that observes and interprets <strong class=\"text-white\">cognitive biases and decision volatility</strong> in high-stakes decision-making environments.",
+                about_text_2: "While many strategy tools focus on delivering the “mathematically correct answer (GTO),” we focus on where execution breaks down when people try to apply it. Our core technology, the <strong class=\"text-white\">G‑Tell Detection Engine</strong>, observes real-time behavioral signals on top of strategy analysis, reducing execution leakage and supporting consistent decisions.<br><br><span class=\"text-sm border-l-2 border-white/10 pl-4 py-3 block\">G‑Tell captures the moment you “know the answer but still collapse” through reaction-time and choice-pattern signals, then connects it to practical <strong class=\"text-white\">execution routines</strong>.</span>",
+                about_text_3: "The engine interprets decision states using interaction signals such as <strong class=\"text-white\">dwell time and click timing/patterns</strong>, and, when needed, provides <strong class=\"text-white\">stabilization routines</strong> and next-action guidance.",
+                about_text_4: "In the long term, JackP Oracle expands behavioral data and AI technology accumulated in mind sports to enter the fields of trading psychology analysis based on Behavioral Finance and corporate decision-making coaching.",
+                biz_title: "Business Model & Scalability",
+                biz_desc: "JackP Oracle's main products are offered as <strong class='text-jackp-light'>cloud-based premium SaaS subscription models</strong> and <strong class='text-jackp-light'>B2B enterprise licenses</strong>. Initially, we verify product value in mind sports, and then expand application scope to esports and enterprise decision-making areas.",
+                tech_label: "Core Technology",
+                tech_desc: "Reaction-time data is standardized into decision signals and used to compute the <strong>Execution Gap</strong>.",
+                eng1_desc: "Establishes the baseline for optimal strategy. This engine is a layer to provide a baseline for measuring execution collapse.",
+                eng1_out: "A 'Reference Play Model' serving as the backbone of judgment and a comparison frame.",
+                eng2_desc: "Distinguish “lack of skill” from “execution collapse” and pinpoint where performance becomes unstable.",
+                eng2_out: "Observation of execution-collapse patterns: hesitation, overheating, shrinkage, avoidance.",
+                eng3_desc: "Confidence is an auxiliary signal to estimate judgment strength. The gap between skill and confidence helps prioritize what to improve first.",
+                eng3_out: "Confidence (0–100) and Execution Gap scores.",
+                eng4_desc: "Resilience is a reproducible process. It reduces wavering after failure and stabilizes the quality of the next decision.",
+                eng4_out: "Recovery routines, recurrence prevention triggers, stabilization guides.",
+                eng5_desc: "Observation is not the end—it is the start. This engine converts insights into actionable rules and routines you can apply today.",
+                eng5_out: "Actionable guidelines applicable immediately today (routines, risk cuts).",
+                sol_label: "Applied Solutions",
+                sol_desc: "Expanding models verified in mind sports to the enterprise sector.",
+                sol_holdem_desc: "A practical coaching system refined in poker—an ultra-dense decision environment—linking decision signals and the Execution Gap to actionable execution routines.",
+                sol_esports_desc: "A battle of 0.1 seconds. optimizing the performance of pro teams and players by analyzing judgment speed and confidence in high-pressure situations. Currently in the stage of redesigning indicators for real-time environments.",
+                sol_corp_desc_1: "A vision to reduce the decision-execution gap of leaders and expand into financial risk management and executive coaching.",
+                sol_corp_desc_2: "We pursue phased PoCs utilizing institutional tracks such as the financial regulatory sandbox to minimize regulatory risks and accelerate verification. This supports long-term value as a RegTech compliance solution.",
+                
+                // [Leadership Section - English]
+                leader_1_name: "Jeon Jong-kook",
+                leader_1_role: "CEO",
+                leader_1_spec: "Global Strategy & Execution",
+                leader_jeon_1: "Oversees JackP Oracle's business structure and expansion based on successful M&A experience and leadership in global corporate environments.",
+                leader_jeon_2: "As an executive in domestic and international companies, he has led organizational growth and business structuring, and is responsible for execution strategies that transform technology from mere 'features' into complete market and business solutions.",
+                
+                leader_2_name: "Chun Hee-sun",
+                leader_2_role: "CPO & Head of R&D",
+                leader_2_spec: "Product Architecture & UX",
+                leader_chun_1: "Oversees product and research based on 25 years of field experience in manufacturing, large-scale organizational planning, and CX (Customer Experience) capabilities.",
+                leader_chun_2: "Grounded in manufacturing-grade quality standards and systems thinking, she designs an observation-to-feedback structure that users can realistically follow—beyond flashy copy.",
+                
+                // [CEO Message - Inline English]
+                ceo_msg_title: "Message from the CEO",
+                ceo_msg_body: `Hello,
+
+I am Jeon Jong-kook, CEO of JackP Oracle.
+I studied economics, and I have long felt the limitations of the “rational human” model assumed by classical economics—its inability to fully explain real-world choices and judgment.
+
+In reality, people do not always make optimal decisions. More importantly, many people cannot clearly articulate why they chose what they chose, or under what conditions and rationale their judgment became fixed.
+
+JackP Oracle is not an organization that evaluates or tries to change people.
+Instead, we study decision environments, the conditions that shape choices, and the structures that produce outcomes when those choices repeat.
+
+Biases such as loss aversion, confirmation bias, and overconfidence do not disappear easily through willpower or experience alone.
+That is why we chose to better understand—and design—the structure in which judgment happens, rather than trying to “fix” individuals.
+
+As we progressed, we found it necessary to observe not only outcomes, but also signals such as judgment strength and instability at the moment of decision.
+To support that observation, we have designed several internal indicators. One of them is the Confidence Index.
+This is not intended to label someone as “more” or “less” confident; it is an auxiliary signal used to examine patterns—when judgment becomes overly rigid under certain conditions, or when it suddenly wavers.
+
+We have filed patents for parts of the calculation method and application structure, and we continue to validate its effectiveness in real service environments.
+
+Our first applied case is HoldemDNA.
+HoldemDNA observes decision patterns in poker—a high-density decision environment—and delivers the result through cards and reports.
+
+JackP Oracle chooses observation over assertion, and structure over evaluation.
+We will continue to research and design decision environments more precisely—how people make choices, and how repeated choices structurally produce outcomes.
+
+Thank you.
+
+CEO
+Jeon Jong-kook`,
+
+                history_label: "History & Vision",
+                history_intro: "Since 2023, we have been building decision engines that change real execution.<br>Accumulating the Execution Gap model not through short-term feature additions, but through repetition of hypothesis-verification-advancement.",
+                hist_1_title: "Inception · Hypothesis",
+                hist_1_desc: "Definition of Execution Gap concept, design of meta-cognition analysis frame.",
+                hist_2_title: "Prototype · Verification",
+                hist_2_desc: "Core engine implementation and verification of real execution-collapse patterns, strengthening the structure that connects observations to execution routines.",
+                hist_3_title: "Commercialization · Prep",
+                hist_3_desc: "Enhancement of flagship case (HoldemDNA), establishing foundation for Esports/Enterprise expansion.",
+                hist_4_title: "Global Scale",
+                hist_4_desc: "Engine expansion through industry-specific PoCs and partnerships.",
+                philosophy_quote: "\"We give solutions, not just answers.<br>We support, not just evaluate.<br>We sell technology, but leave people behind.\"",
+                faq_1_q: "Q. What differentiates JackP Oracle?",
+                faq_1_a: "Beyond providing “the right answer,” we capture where execution breaks down—using signals like reaction time and choice patterns—and connect it to practical routines.",
+                faq_2_q: "Q. How are the decision signals (Confidence / Execution Gap) computed?",
+                faq_2_a: "We combine signals such as reaction time and choice patterns to estimate judgment strength, then compare it to a personal baseline to compute the Execution Gap. Results include suggested execution routines, not just scores.",
+                faq_3_q: "Q. Is it related to gambling/betting?",
+                faq_3_a: "No. We do not provide betting, brokerage, or outcome-prediction services. This is a coaching/feedback solution based on observing behavioral and metacognitive signals.",
+                faq_4_q: "Q. How are B2B PoC/Partnerships conducted?",
+                faq_4_a: "After defining industry-specific target indicators and data environments, we verify the Execution Gap improvement effect by applying the engine during the pilot period.",
+                faq_5_q: "Q. How is data handled?",
+                faq_5_a: "We adhere to principles of minimum collection and purpose limitation. Personal identification information and behavioral data are strictly separated and processed.",
+
+                // [Footer - English]
+                footer_addr: "Room 313-32, Botanic Park Tower 3, 11 Magokjungang 6-ro, Gangseo-gu, Seoul, Republic of Korea | contact@jackporacle.com",
+                footer_copyright: "© 2026 JackP Oracle Co., Ltd."
+            }
+        };
+
+        let currentLang = 'ko';
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('btn-ko').classList.remove('active');
+            document.getElementById('btn-en').classList.remove('active');
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            const elements = document.querySelectorAll('[data-key]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.innerHTML = translations[lang][key];
+            });
+        }
+    </script>
+</body>
+</html>
