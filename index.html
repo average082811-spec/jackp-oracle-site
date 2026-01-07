@@ -140,6 +140,27 @@
         .modal-content-scroll::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
         .modal-content-scroll::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
     </style>
+<style id="aos-fallback">
+  /* Fallback: if AOS JS fails to initialize (common on some mobile/webview cases),
+     do NOT keep content hidden. Once AOS is ready, body gets .aos-ready and this rule stops applying. */
+  body:not(.aos-ready) [data-aos]{
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+</style>
+
+    <style>
+      /* lang switch: ensure buttons are clickable and look like text */
+      #btn-ko, #btn-en { background: transparent; border: 0; line-height: 1; }
+      #btn-ko:focus, #btn-en:focus { outline: none; }
+    </style>
+
+
+    <style>
+      #btn-ko.active, #btn-en.active { color: #996CAC; font-weight: 800; }
+    </style>
+
 </head>
 <body class="font-sans antialiased selection:bg-jackp-primary selection:text-white">
 
@@ -223,6 +244,13 @@
                 <p class="text-xl md:text-2xl text-white font-medium mb-10 leading-relaxed">
                     <span class="text-jackp-primary font-bold">Human × AI,</span> <span data-key="hero_sub_slogan"> 조합적 승리.<br>
                     인간의 약점은 AI가 보완하고, AI의 빈틈은 인간이 채웁니다.</span>
+                </p>
+
+                <p class="text-gray-300 text-base md:text-lg mb-4 max-w-2xl leading-relaxed" data-key="hero_direct">
+                    JackP Oracle는 선택·반응 패턴을 측정해 ‘실행 격차(Execution Gap)’를 줄이는 의사결정 기술(Decision Intelligence) 팀입니다.
+                </p>
+                <p class="text-gray-400 text-sm md:text-base mb-10 max-w-2xl leading-relaxed" data-key="hero_product">
+                    HoldemDNA는 JackP Oracle이 개발한 포커 의사결정 리포트 앱입니다. 플레이 중 선택·반응·흔들림 패턴을 데이터로 포착해 “아는 대로 못 하는 순간(Execution Gap)”을 줄이는 루틴을 제공합니다.
                 </p>
                 
                 <div class="border-l-4 border-jackp-primary pl-6 py-2 mb-10 bg-black/40 backdrop-blur-sm rounded-r-xl max-w-2xl">
@@ -483,35 +511,7 @@
                     <svg class="w-24 h-24 text-jackp-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 13.1216 16 12.017 16H9C9.00012 13.1784 11.3185 11.0664 12.8711 11.2337L13.8824 11.3427L13.6664 9.33682C11.5947 9.11364 8.99988 11.4589 8.99988 16H8C6.89543 16 6 16.8954 6 18V21H14.017ZM21 21L21 18C21 16.8954 20.1046 16 19 16H15.983C15.9831 13.1784 18.3014 11.0664 19.854 11.2337L20.8653 11.3427L20.6493 9.33682C18.5776 9.11364 15.9828 11.4589 15.9828 16H15C13.8954 16 13 16.8954 13 18V21H21Z"/></svg>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-8 border-l-4 border-jackp-primary pl-4" data-key="ceo_msg_title">CEO 인사말</h3>
-                <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line text-sm md:text-base max-w-4xl" data-key="ceo_msg_body">안녕하세요.<br>
-<br>
-JackP Oracle 대표이사 전종국입니다.<br>
-저는 경제학을 전공하며, 전통 경제학이 전제하는 ‘합리적 인간’ 모델이 현실의 선택과 판단을 충분히 설명하지 못한다는 한계를 지속적으로 느껴왔습니다.<br>
-<br>
-현실의 사람은 언제나 최적의 선택을 하지 않습니다. 그리고 더 중요한 것은, 왜 그 선택을 했는지, 어떤 조건에서 어떤 근거로 판단이 굳어졌는지를 스스로도 명확히 설명하지 못하는 경우가 많다는 점입니다.<br>
-<br>
-JackP Oracle은 사람을 평가하거나 바꾸려는 조직이 아닙니다.<br>
-대신 사람이 결정을 내리는 환경, 선택을 유도하는 조건, 그리고 반복될 때 결과를 만들어내는 구조를 연구합니다.<br>
-<br>
-손실회피, 확증편향, 과잉확신 같은 인지편향은 개인의 의지나 경험만으로 쉽게 사라지지 않습니다.<br>
-그래서 우리는 사람을 바꾸기보다, 사람이 판단하게 되는 구조 자체를 더 잘 이해하고 설계하는 방식을 선택했습니다.<br>
-<br>
-이 연구를 진행하며 우리는 결과만이 아니라, 결정 순간의 판단 강도와 흔들림 같은 신호도 함께 관측할 필요가 있다고 보았습니다.<br>
-이를 돕기 위해 내부적으로 여러 지표를 설계해 왔고, 그중 하나가 확신도(Confidence Index)입니다.<br>
-이는 “자신감이 높다/낮다”를 단정하기 위한 것이 아니라, 특정 조건에서 판단이 과도하게 단단해지거나 반대로 급격히 흔들리는 패턴이 있는지를 더 정밀하게 보기 위한 보조 지표입니다.<br>
-<br>
-관련 산출 방식과 적용 구조는 특허 출원을 진행 중이며, 서비스 환경에서의 유효성을 계속 검증하고 있습니다.<br>
-<br>
-이 연구의 첫 번째 적용 사례가 HoldemDNA입니다.<br>
-HoldemDNA는 포커라는 고밀도의 의사결정 환경에서 판단 패턴을 관측하고, 그 결과를 카드와 리포트라는 형태로 구현한 프로젝트입니다.<br>
-<br>
-JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다.<br>
-앞으로도 우리는 사람들이 어떤 환경에서 어떤 선택을 하게 되는지, 그리고 그 반복이 어떤 결과를 구조적으로 만들어내는지를 더 정확하게 연구하고 설계해 나가겠습니다.<br>
-<br>
-감사합니다.<br>
-<br>
-대표이사<br>
-전종국</div>
+                <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line text-sm md:text-base max-w-4xl" data-key="ceo_msg_body">“우리는 사람을 평가하지 않습니다. 사람이 판단하는 ‘구조’를 관측합니다.”<br><br>안녕하세요. JackP Oracle 대표이사 전종국입니다.<br><br>경제학은 인간을 ‘합리적 존재’로 가정하지만, 현실의 선택은 늘 그 전제대로 흘러가지 않습니다. 우리는 완벽하지 않으며, 때로는 같은 상황에서도 다른 결정을 반복합니다. 더 중요한 사실은, 왜 그 선택을 했는지—어떤 조건에서 판단이 굳어졌는지—스스로도 명확히 설명하지 못하는 경우가 많다는 점입니다.<br><br>JackP Oracle은 이 <strong>‘아는 것과 실행 사이의 흔들림(Execution Gap)’</strong>에 주목합니다.<br><br>우리는 사람을 억지로 바꾸거나 평가하려 하지 않습니다. 손실 회피, 확증 편향 같은 인지적 본능은 의지만으로 사라지지 않기 때문입니다. 대신 사람이 결정을 내리는 환경과 조건, 그 선택을 유도하는 신호, 그리고 결과로 이어지는 반복 패턴을 연구합니다.<br><br>이를 위해 단순한 결과값이 아니라, 판단이 만들어지는 순간의 확신의 강도와 흔들림을 관측해야 한다고 보았습니다. 특허 출원 중인 ‘확신도(Confidence Index)’ 지표는 이러한 미세한 변화 신호를 데이터로 시각화하기 위한 연구의 결과입니다.<br><br>우리의 첫 프로젝트인 HoldemDNA는 이 기술을 포커라는 고밀도 의사결정 환경에 적용한 의사결정 리포트 앱입니다. 플레이 중 선택·반응·흔들림 패턴을 데이터로 요약해, ‘아는 대로 못 하는 순간’을 줄이는 루틴을 제공합니다.<br><br>JackP Oracle은 단정 대신 관측을, 평가 대신 설계를 지향합니다. 앞으로도 인간이 어떤 환경에서 어떤 선택을 내리는지, 그 구조를 더 선명하게 밝혀내는 연구를 멈추지 않겠습니다.<br><br>감사합니다.<br><br>(주) 잭피오라클 대표이사 전 종 국</div>
             </div>
 
         </div>
@@ -616,7 +616,80 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
             </div>
         </div>
 
-        <footer class="max-w-7xl mx-auto px-6 border-t border-white/10 pt-12">
+        
+    <!-- LOCATION / HQ -->
+    <section id="location" class="py-24 bg-black relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="mb-16 text-center" data-aos="fade-up">
+                <h2 class="text-jackp-primary font-bold tracking-widest text-sm uppercase mb-3" data-key="loc_label">Location</h2>
+                <h3 class="text-3xl md:text-4xl font-black text-white mb-4" data-key="loc_title">Visit Our HQ</h3>
+                <p class="text-gray-400" data-key="loc_desc">데이터와 실행이 만나는 곳, JackP Oracle 본사입니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                <div class="glass-panel p-8 rounded-2xl flex flex-col justify-center border border-white/10 bg-[#1a1a1a]/60 backdrop-blur-md" data-aos="fade-right">
+                    <h4 class="text-2xl font-bold text-white mb-8 border-l-4 border-jackp-primary pl-4" data-key="loc_info_title">오시는 길</h4>
+
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 text-jackp-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            </div>
+                            <div>
+                                <strong class="text-white block text-lg mb-1" data-key="loc_addr_title">Address</strong>
+                                <p class="text-gray-400 text-sm leading-relaxed" data-key="loc_addr_detail">
+                                    서울 강서구 마곡중앙6로 11<br>
+                                    보타닉파크타워3, 313-32호
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 text-jackp-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            </div>
+                            <div>
+                                <strong class="text-white block text-lg mb-1" data-key="loc_subway_title">Subway</strong>
+                                <p class="text-gray-400 text-sm leading-relaxed" data-key="loc_subway_detail">
+                                    <span class="text-[#996CAC] font-bold">5호선 마곡역</span> 3번 출구<br>
+                                    도보 약 200m (약 3분 소요)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 text-jackp-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                            </div>
+                            <div>
+                                <strong class="text-white block text-lg mb-1" data-key="loc_parking_title">Parking & Info</strong>
+                                <p class="text-gray-400 text-sm leading-relaxed" data-key="loc_parking_detail">
+                                    건물 내 지하 주차장 이용 가능<br>
+                                    방문 전 미리 연락 주시면 주차 등록을 도와드립니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 flex gap-3">
+                        <a href="https://map.kakao.com/link/to/보타닉파크타워3,37.5603,126.8256" target="_blank" class="flex-1 py-3 bg-[#FAE100] text-[#3C1E1E] text-center rounded-lg font-bold text-sm hover:opacity-90 transition shadow-lg">
+                            Kakao Map
+                        </a>
+                        <a href="https://map.naver.com/p/directions/-/14118527.029662,4517593.3584295,%EB%B3%B4%ED%83%80%EB%8B%89%ED%8C%8C%ED%81%AC%ED%83%80%EC%9B%8C3,1891737368,PLACE_POI/-/car?c=15.00,0,0,0,dh" target="_blank" class="flex-1 py-3 bg-[#03C75A] text-white text-center rounded-lg font-bold text-sm hover:opacity-90 transition shadow-lg">
+                            Naver Map
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-2 rounded-2xl h-[500px] lg:h-auto overflow-hidden relative tilt-card border border-white/10" data-aos="fade-left">
+                    <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1767782826/%EB%A7%88%EA%B3%A1%EB%B3%B4%ED%83%80%EB%8B%89%ED%83%80%EC%9B%8C3_kjyl3n.png" alt="JackP Oracle HQ - Botanic Park Tower 3" class="w-full h-full object-cover rounded-xl tilt-content hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 pointer-events-none border border-white/5 rounded-xl shadow-inner mix-blend-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<footer class="max-w-7xl mx-auto px-6 border-t border-white/10 pt-12">
             <div class="md:flex justify-between items-center mb-8">
                 <div class="flex items-center gap-3 mb-4 md:mb-0">
                     <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765531744/logo_uwesei.png" alt="JackP Oracle Symbol" class="h-8 w-auto">
@@ -671,7 +744,7 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ once: true, offset: 50, duration: 800 });
+        try { AOS.init({ once: true, offset: 50, duration: 800 }); document.body.classList.add("aos-ready"); } catch(e) { console.warn("AOS init failed", e); }
 
         function toggleModal(modalID){
             const modal = document.getElementById(modalID);
@@ -841,7 +914,7 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 biz_title: "Business Model & Scalability",
                 biz_desc: "JackP Oracle의 주력 제품은 <strong class='text-jackp-light'>클라우드 기반 프리미엄 SaaS 구독 모델</strong>과 <strong class='text-jackp-light'>B2B 엔터프라이즈 라이선스</strong> 형태로 제공됩니다. 초기에는 마인드 스포츠에서 제품 가치를 검증하고, 이후 e스포츠 및 엔터프라이즈 의사결정 영역으로 적용 범위를 확장합니다.",
                 tech_label: "Core Technology",
-                tech_desc: "반응시간 기반 데이터는 표준화되어 판단 신호로 변환되며, <strong>Execution Gap</strong>을 계산합니다.",
+                tech_desc: `선택·반응시간·주저·변동성 같은 ‘의사결정 신호’를 측정하고, 실행으로 이어지게 만드는 루틴/피드백 구조를 설계합니다.`,
                 eng1_desc: "최적 전략의 기준선을 세웁니다. 이 엔진은 실행 붕괴를 측정할 기준선을 제공하기 위한 레이어입니다.",
                 eng1_out: "판단의 뼈대가 되는 '기준 플레이 모델'과 비교 프레임.",
                 eng2_desc: "\"실력 부족\"이 아니라 \"실행 붕괴\"인지 구분해, 흔들리는 지점을 정확히 포착합니다.",
@@ -853,8 +926,8 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 eng5_desc: "관측은 끝이 아니라 시작입니다. 이 엔진은 결과를 오늘 적용 가능한 행동 규칙(루틴)으로 전환합니다.",
                 eng5_out: "오늘 바로 적용 가능한 행동 지침(루틴, 리스크 컷).",
                 sol_label: "Applied Solutions",
-                sol_desc: "마인드 스포츠에서 검증한 모델을 엔터프라이즈 영역으로 확장합니다.",
-                sol_holdem_desc: "포커라는 압축된 의사결정 환경에서 판단 신호와 실행 격차를 검증·고도화한 실전형 코칭 시스템입니다. 관측이 실행 루틴 제안으로 이어지도록 설계했습니다.",
+                sol_desc: `HoldemDNA 같은 제품으로 ‘압박 구간에서 아는 대로 못 하는 문제(Execution Gap)’를 줄이는 실행 루틴을 제공합니다.`,
+                sol_holdem_desc: `HoldemDNA는 JackP Oracle이 개발한 포커 의사결정 리포트 앱입니다. 플레이 중 선택·반응·흔들림 패턴을 데이터로 포착해 “아는 대로 못 하는 순간(Execution Gap)”을 줄이는 루틴을 제공합니다.`,
                 sol_esports_desc: "0.1초의 승부. 고압 상황에서의 판단 속도와 확신을 분석하여 프로 팀과 선수의 퍼포먼스를 최적화합니다. 현재 실시간 환경에 맞춘 지표 재설계 단계입니다.",
                 sol_corp_desc_1: "리더의 결정-실행 격차를 줄이고, 금융 리스크 관리 및 임원 코칭으로 확장하는 비전입니다.",
                 sol_corp_desc_2: "우리는 규제 리스크를 최소화하고 실증을 가속하기 위해 금융규제 샌드박스 등 제도적 트랙을 활용한 단계적 PoC를 추진합니다. 이는 장기적으로 RegTech 준수 솔루션으로서의 가치를 뒷받침합니다.",
@@ -874,35 +947,7 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 
                 // [CEO Message - Inline]
                 ceo_msg_title: "CEO 인사말",
-                ceo_msg_body: `안녕하세요.
-
-JackP Oracle 대표이사 전종국입니다.
-저는 경제학을 전공하며, 전통 경제학이 전제하는 ‘합리적 인간’ 모델이 현실의 선택과 판단을 충분히 설명하지 못한다는 한계를 지속적으로 느껴왔습니다.
-
-현실의 사람은 언제나 최적의 선택을 하지 않습니다. 그리고 더 중요한 것은, 왜 그 선택을 했는지, 어떤 조건에서 어떤 근거로 판단이 굳어졌는지를 스스로도 명확히 설명하지 못하는 경우가 많다는 점입니다.
-
-JackP Oracle은 사람을 평가하거나 바꾸려는 조직이 아닙니다.
-대신 사람이 결정을 내리는 환경, 선택을 유도하는 조건, 그리고 반복될 때 결과를 만들어내는 구조를 연구합니다.
-
-손실회피, 확증편향, 과잉확신 같은 인지편향은 개인의 의지나 경험만으로 쉽게 사라지지 않습니다.
-그래서 우리는 사람을 바꾸기보다, 사람이 판단하게 되는 구조 자체를 더 잘 이해하고 설계하는 방식을 선택했습니다.
-
-이 연구를 진행하며 우리는 결과만이 아니라, 결정 순간의 판단 강도와 흔들림 같은 신호도 함께 관측할 필요가 있다고 보았습니다.
-이를 돕기 위해 내부적으로 여러 지표를 설계해 왔고, 그중 하나가 확신도(Confidence Index)입니다.
-이는 “자신감이 높다/낮다”를 단정하기 위한 것이 아니라, 특정 조건에서 판단이 과도하게 단단해지거나 반대로 급격히 흔들리는 패턴이 있는지를 더 정밀하게 보기 위한 보조 지표입니다.
-
-관련 산출 방식과 적용 구조는 특허 출원을 진행 중이며, 서비스 환경에서의 유효성을 계속 검증하고 있습니다.
-
-이 연구의 첫 번째 적용 사례가 HoldemDNA입니다.
-HoldemDNA는 포커라는 고밀도의 의사결정 환경에서 판단 패턴을 관측하고, 그 결과를 카드와 리포트라는 형태로 구현한 프로젝트입니다.
-
-JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다.
-앞으로도 우리는 사람들이 어떤 환경에서 어떤 선택을 하게 되는지, 그리고 그 반복이 어떤 결과를 구조적으로 만들어내는지를 더 정확하게 연구하고 설계해 나가겠습니다.
-
-감사합니다.
-
-대표이사
-전종국`,
+                ceo_msg_body: `“우리는 사람을 평가하지 않습니다. 사람이 판단하는 ‘구조’를 관측합니다.”<br><br>안녕하세요. JackP Oracle 대표이사 전종국입니다.<br><br>경제학은 인간을 ‘합리적 존재’로 가정하지만, 현실의 선택은 늘 그 전제대로 흘러가지 않습니다. 우리는 완벽하지 않으며, 때로는 같은 상황에서도 다른 결정을 반복합니다. 더 중요한 사실은, 왜 그 선택을 했는지—어떤 조건에서 판단이 굳어졌는지—스스로도 명확히 설명하지 못하는 경우가 많다는 점입니다.<br><br>JackP Oracle은 이 <strong>‘아는 것과 실행 사이의 흔들림(Execution Gap)’</strong>에 주목합니다.<br><br>우리는 사람을 억지로 바꾸거나 평가하려 하지 않습니다. 손실 회피, 확증 편향 같은 인지적 본능은 의지만으로 사라지지 않기 때문입니다. 대신 사람이 결정을 내리는 환경과 조건, 그 선택을 유도하는 신호, 그리고 결과로 이어지는 반복 패턴을 연구합니다.<br><br>이를 위해 단순한 결과값이 아니라, 판단이 만들어지는 순간의 확신의 강도와 흔들림을 관측해야 한다고 보았습니다. 특허 출원 중인 ‘확신도(Confidence Index)’ 지표는 이러한 미세한 변화 신호를 데이터로 시각화하기 위한 연구의 결과입니다.<br><br>우리의 첫 프로젝트인 HoldemDNA는 이 기술을 포커라는 고밀도 의사결정 환경에 적용한 의사결정 리포트 앱입니다. 플레이 중 선택·반응·흔들림 패턴을 데이터로 요약해, ‘아는 대로 못 하는 순간’을 줄이는 루틴을 제공합니다.<br><br>JackP Oracle은 단정 대신 관측을, 평가 대신 설계를 지향합니다. 앞으로도 인간이 어떤 환경에서 어떤 선택을 내리는지, 그 구조를 더 선명하게 밝혀내는 연구를 멈추지 않겠습니다.<br><br>감사합니다.<br><br>(주) 잭피오라클 대표이사 전 종 국`,
 
                 history_label: "History & Vision",
                 history_intro: "Since 2023, we have been building decision engines that change real execution.<br>단기간 기능 추가가 아니라, 가설–검증–고도화의 반복으로 실행 격차(Execution Gap) 모델을 축적해 왔습니다.",
@@ -928,8 +973,20 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 
                 // [Footer]
                 footer_addr: "서울특별시 강서구 마곡중앙6로 11 (마곡동 보타닉파크타워 3) 313-32호 | contact@jackporacle.com",
-                footer_copyright: "© 2026 주식회사 잭피오라클 (JackP Oracle Co., Ltd.)"
-            },
+                footer_copyright: "© 2026 주식회사 잭피오라클 (JackP Oracle Co., Ltd.)",
+                loc_label: "LOCATION",
+                loc_title: `JackP Oracle 본사`,
+                loc_desc: `데이터와 실행이 만나는 곳, JackP Oracle 본사입니다.`,
+                loc_info_title: "오시는 길",
+                loc_addr_title: `주소`,
+                loc_addr_detail: `서울 강서구 마곡중앙6로 11<br>보타닉파크타워3, 313-32호<br><span class='text-white/60'>11, Magokjungang 6-ro, Gangseo-gu, Seoul (Botanic Park Tower 3, Suite 313-32)</span>`,
+                loc_subway_title: "지하철",
+                loc_subway_detail: `<span class='text-[#996CAC] font-bold'>5호선 마곡역</span> 3번 출구<br>도보 약 200m (약 3분 소요)<br><span class='text-white/60'>Line 5, Magok Station Exit 3 · ~200m (≈3 min walk)</span>`,
+                loc_parking_title: "주차 / 안내",
+                loc_parking_detail: `건물 내 지하 주차장 이용 가능<br>방문 전 미리 연락 주시면 주차 등록을 도와드립니다.<br><span class='text-white/60'>Underground parking available. Please contact us in advance for parking registration.</span>`,
+      hero_direct: `JackP Oracle는 선택·반응 패턴을 측정해 ‘실행 격차(Execution Gap)’를 줄이는 의사결정 기술(Decision Intelligence) 팀입니다.`,
+      hero_product: `HoldemDNA는 JackP Oracle이 개발한 포커 의사결정 리포트 앱입니다. 플레이 중 선택·반응·흔들림 패턴을 데이터로 포착해 “아는 대로 못 하는 순간(Execution Gap)”을 줄이는 루틴을 제공합니다.`
+    },
             en: {
                 nav_about: "About",
                 nav_tech: "Technology",
@@ -952,7 +1009,7 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 biz_title: "Business Model & Scalability",
                 biz_desc: "JackP Oracle's main products are offered as <strong class='text-jackp-light'>cloud-based premium SaaS subscription models</strong> and <strong class='text-jackp-light'>B2B enterprise licenses</strong>. Initially, we verify product value in mind sports, and then expand application scope to esports and enterprise decision-making areas.",
                 tech_label: "Core Technology",
-                tech_desc: "Reaction-time data is standardized into decision signals and used to compute the <strong>Execution Gap</strong>.",
+                tech_desc: `We measure decision signals—choices, response time, hesitation, and volatility—and turn them into routines and feedback that improve execution.`,
                 eng1_desc: "Establishes the baseline for optimal strategy. This engine is a layer to provide a baseline for measuring execution collapse.",
                 eng1_out: "A 'Reference Play Model' serving as the backbone of judgment and a comparison frame.",
                 eng2_desc: "Distinguish “lack of skill” from “execution collapse” and pinpoint where performance becomes unstable.",
@@ -964,8 +1021,8 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 eng5_desc: "Observation is not the end—it is the start. This engine converts insights into actionable rules and routines you can apply today.",
                 eng5_out: "Actionable guidelines applicable immediately today (routines, risk cuts).",
                 sol_label: "Applied Solutions",
-                sol_desc: "Expanding models verified in mind sports to the enterprise sector.",
-                sol_holdem_desc: "A practical coaching system refined in poker—an ultra-dense decision environment—linking decision signals and the Execution Gap to actionable execution routines.",
+                sol_desc: `Through products like HoldemDNA, we deliver execution routines that reduce the Execution Gap—especially under pressure.`,
+                sol_holdem_desc: `HoldemDNA is a poker decision report app developed by JackP Oracle. It captures choice, reaction, and tilt patterns to help you close the Execution Gap with actionable routines.`,
                 sol_esports_desc: "A battle of 0.1 seconds. optimizing the performance of pro teams and players by analyzing judgment speed and confidence in high-pressure situations. Currently in the stage of redesigning indicators for real-time environments.",
                 sol_corp_desc_1: "A vision to reduce the decision-execution gap of leaders and expand into financial risk management and executive coaching.",
                 sol_corp_desc_2: "We pursue phased PoCs utilizing institutional tracks such as the financial regulatory sandbox to minimize regulatory risks and accelerate verification. This supports long-term value as a RegTech compliance solution.",
@@ -985,35 +1042,7 @@ JackP Oracle은 단정 대신 관측을, 평가 대신 구조를 선택합니다
                 
                 // [CEO Message - Inline English]
                 ceo_msg_title: "Message from the CEO",
-                ceo_msg_body: `Hello,
-
-I am Jeon Jong-kook, CEO of JackP Oracle.
-I studied economics, and I have long felt the limitations of the “rational human” model assumed by classical economics—its inability to fully explain real-world choices and judgment.
-
-In reality, people do not always make optimal decisions. More importantly, many people cannot clearly articulate why they chose what they chose, or under what conditions and rationale their judgment became fixed.
-
-JackP Oracle is not an organization that evaluates or tries to change people.
-Instead, we study decision environments, the conditions that shape choices, and the structures that produce outcomes when those choices repeat.
-
-Biases such as loss aversion, confirmation bias, and overconfidence do not disappear easily through willpower or experience alone.
-That is why we chose to better understand—and design—the structure in which judgment happens, rather than trying to “fix” individuals.
-
-As we progressed, we found it necessary to observe not only outcomes, but also signals such as judgment strength and instability at the moment of decision.
-To support that observation, we have designed several internal indicators. One of them is the Confidence Index.
-This is not intended to label someone as “more” or “less” confident; it is an auxiliary signal used to examine patterns—when judgment becomes overly rigid under certain conditions, or when it suddenly wavers.
-
-We have filed patents for parts of the calculation method and application structure, and we continue to validate its effectiveness in real service environments.
-
-Our first applied case is HoldemDNA.
-HoldemDNA observes decision patterns in poker—a high-density decision environment—and delivers the result through cards and reports.
-
-JackP Oracle chooses observation over assertion, and structure over evaluation.
-We will continue to research and design decision environments more precisely—how people make choices, and how repeated choices structurally produce outcomes.
-
-Thank you.
-
-CEO
-Jeon Jong-kook`,
+                ceo_msg_body: `“We do not judge people. We observe the 'structure' of their judgment.”<br><br>Hello, I am Jeon Jong-kook, CEO of JackP Oracle.<br><br>Economics assumes humans are 'rational agents', but real-world choices rarely align with that premise. We are imperfect, often making different decisions in identical situations. Crucially, we often cannot explain why a choice was made—or under what conditions our judgment solidified.<br><br>JackP Oracle focuses on this <strong>'Execution Gap—the wavering between knowing and doing.'</strong><br><br>We do not seek to forcibly change or evaluate people. Cognitive instincts like loss aversion and confirmation bias cannot be erased by will alone. Instead, we study the environments and conditions where decisions occur, the signals driving those choices, and the recurring patterns that shape outcomes.<br><br>To achieve this, we look beyond simple results to observe the intensity of conviction and hesitation at the moment of decision. Our patent-pending 'Confidence Index' is the result of research designed to visualize these subtle signal changes as data.<br><br>Our first project, HoldemDNA, is a decision intelligence app applying this technology to poker—a high-density decision environment. It summarizes patterns of choice, reaction, and hesitation into data, offering routines to minimize the gap between what you know and what you do.<br><br>JackP Oracle chooses observation over judgment, and design over evaluation. We will continue our research to clearly illuminate the structures behind human choice and environment.<br><br>Thank you.<br><br>Jeon Jong-kook, CEO, JackP Oracle Co., Ltd.`,
 
                 history_label: "History & Vision",
                 history_intro: "Since 2023, we have been building decision engines that change real execution.<br>Accumulating the Execution Gap model not through short-term feature additions, but through repetition of hypothesis-verification-advancement.",
@@ -1039,8 +1068,20 @@ Jeon Jong-kook`,
 
                 // [Footer - English]
                 footer_addr: "Room 313-32, Botanic Park Tower 3, 11 Magokjungang 6-ro, Gangseo-gu, Seoul, Republic of Korea | contact@jackporacle.com",
-                footer_copyright: "© 2026 JackP Oracle Co., Ltd."
-            }
+                footer_copyright: "© 2026 JackP Oracle Co., Ltd.",
+                loc_label: "LOCATION",
+                loc_title: `Visit Our HQ`,
+                loc_desc: `Where data meets execution — JackP Oracle Headquarters.`,
+                loc_info_title: "Directions",
+                loc_addr_title: `Address`,
+                loc_addr_detail: `11, Magokjungang 6-ro, Gangseo-gu, Seoul<br>Botanic Park Tower 3, Suite 313-32`,
+                loc_subway_title: "Subway",
+                loc_subway_detail: `<span class='text-[#996CAC] font-bold'>Line 5 · Magok Station</span> Exit 3<br>~200m (≈3 min walk)`,
+                loc_parking_title: "Parking & Info",
+                loc_parking_detail: `Underground parking available.<br>Please contact us in advance for parking registration.`,
+      hero_direct: `JackP Oracle is a decision‑intelligence team that measures choice and response signals to narrow the Execution Gap.`,
+      hero_product: `HoldemDNA is a poker decision report app developed by JackP Oracle. It captures in‑game choices, reactions, and tilt patterns to help you execute under pressure.`
+    }
         };
 
         let currentLang = 'ko';
