@@ -139,7 +139,13 @@
         .modal-content-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
         .modal-content-scroll::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
         .modal-content-scroll::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
-    </style>
+    
+        /* --- Copy deterrence (best-effort) --- */
+        html, body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+        img { -webkit-user-drag: none; user-drag: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+
+</style>
 <style id="aos-fallback">
   /* Fallback: if AOS JS fails to initialize (common on some mobile/webview cases),
      do NOT keep content hidden. Once AOS is ready, body gets .aos-ready and this rule stops applying. */
@@ -148,18 +154,36 @@
     transform: none !important;
     transition: none !important;
   }
+
+        /* --- Copy deterrence (best-effort) --- */
+        html, body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+        img { -webkit-user-drag: none; user-drag: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+
 </style>
 
     <style>
       /* lang switch: ensure buttons are clickable and look like text */
       #btn-ko, #btn-en { background: transparent; border: 0; line-height: 1; }
       #btn-ko:focus, #btn-en:focus { outline: none; }
-    </style>
+    
+        /* --- Copy deterrence (best-effort) --- */
+        html, body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+        img { -webkit-user-drag: none; user-drag: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+
+</style>
 
 
     <style>
       #btn-ko.active, #btn-en.active { color: #996CAC; font-weight: 800; }
-    </style>
+    
+        /* --- Copy deterrence (best-effort) --- */
+        html, body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+        img { -webkit-user-drag: none; user-drag: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+
+</style>
 
 </head>
 <body class="font-sans antialiased selection:bg-jackp-primary selection:text-white">
@@ -584,7 +608,7 @@
              <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-black/80"></div>
         </div>
         <div class="max-w-4xl mx-auto relative z-10" data-aos="zoom-in">
-            <blockquote class="text-2xl md:text-3xl font-serif italic text-white leading-relaxed mb-6" data-key="philosophy_quote">"정답이 아니라 해결책을 준다.<br>평가가 아니라 지지를 한다.<br>기술을 팔지만 사람을 남긴다."</blockquote>
+            <blockquote class="mx-auto max-w-3xl text-xl md:text-2xl font-serif italic text-white leading-relaxed mb-6" data-key="philosophy_quote">정답이 아니라 해결책을 준다.<br>평가가 아니라 지지를 한다.<br>기술을 팔지만 사람을 남긴다.<br><span class="block mt-4 text-lg md:text-xl opacity-90">정답보다 중요한 건 실행을 반복 가능하게 만드는 루틴입니다.<br>우리는 그 루틴을 남깁니다.</span></blockquote>
             <p class="text-xs text-jackp-primary font-bold uppercase">JackP Oracle Philosophy</p>
         </div>
     </section>
@@ -736,7 +760,7 @@
             <div class="modal-content py-8 text-center px-8">
                 <div class="mb-4 text-4xl">⚖️</div>
                 <h3 class="text-xl font-bold text-white mb-2">Legal Notice</h3>
-                <p class="text-gray-400 text-sm mb-6">현재 법인 설립 절차가 진행 중입니다.<br>이용약관 및 개인정보처리방침은 곧 업데이트될 예정입니다.</p>
+                <p class="text-gray-400 text-sm mb-6">법인 설립이 완료되었습니다.<br>이용약관 및 개인정보처리방침은 순차 업데이트됩니다.</p>
                 <button onclick="toggleModal('privacy-modal')" class="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-bold rounded-lg transition">확인</button>
             </div>
         </div>
@@ -745,6 +769,36 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         try { AOS.init({ once: true, offset: 50, duration: 800 }); document.body.classList.add("aos-ready"); } catch(e) { console.warn("AOS init failed", e); }
+
+        // --- [COPY / CONTEXT MENU DETERRENCE] ---
+        // Note: This is a best-effort deterrence only. Determined users can still capture content via browser tools.
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('copy', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('cut', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const k = (e.key || '').toLowerCase();
+            const isMac = navigator.platform.toUpperCase().includes('MAC');
+            const mod = isMac ? e.metaKey : e.ctrlKey;
+            if (mod && (k === 'c' || k === 'x')) {
+                e.preventDefault();
+            }
+        });
+
+        // Prevent image dragging
+        document.addEventListener('dragstart', (e) => {
+            const t = e.target;
+            if (t && t.tagName === 'IMG') e.preventDefault();
+        });
+
 
         function toggleModal(modalID){
             const modal = document.getElementById(modalID);
@@ -959,7 +1013,7 @@
                 hist_3_desc: "Enhancement of flagship case (HoldemDNA), establishing foundation for Esports/Enterprise expansion.",
                 hist_4_title: "Global Scale",
                 hist_4_desc: "Engine expansion through industry-specific PoCs and partnerships.",
-                philosophy_quote: "\"We give solutions, not just answers.<br>We support, not just evaluate.<br>We sell technology, but leave people behind.\"",
+                philosophy_quote: "정답이 아니라 해결책을 준다.<br>평가가 아니라 지지를 한다.<br>기술을 팔지만 사람을 남긴다.<br><span class=\"block mt-4 text-lg md:text-xl opacity-90\">정답보다 중요한 건 실행을 반복 가능하게 만드는 루틴입니다.<br>우리는 그 루틴을 남깁니다.</span>",
                 faq_1_q: "Q. JackP Oracle의 차별점은 무엇인가요?",
                 faq_1_a: "정답(전략)을 제공하는 것을 넘어, 정답을 알고도 무너지는 지점을 반응시간·선택 패턴 같은 신호로 포착하고 실행 루틴으로 연결합니다.",
                 faq_2_q: "Q. 판단 신호(Confidence/Execution Gap)는 어떻게 산출하나요?",
@@ -1054,7 +1108,7 @@
                 hist_3_desc: "Enhancement of flagship case (HoldemDNA), establishing foundation for Esports/Enterprise expansion.",
                 hist_4_title: "Global Scale",
                 hist_4_desc: "Engine expansion through industry-specific PoCs and partnerships.",
-                philosophy_quote: "\"We give solutions, not just answers.<br>We support, not just evaluate.<br>We sell technology, but leave people behind.\"",
+                philosophy_quote: "We give solutions, not just answers.<br>We support, not judge.<br>We sell technology, but we leave people stronger.<br><span class=\"block mt-4 text-lg md:text-xl opacity-90\">What matters more than the right answer is a routine that makes execution repeatable.<br>That routine is what we leave behind.</span>",
                 faq_1_q: "Q. What differentiates JackP Oracle?",
                 faq_1_a: "Beyond providing “the right answer,” we capture where execution breaks down—using signals like reaction time and choice patterns—and connect it to practical routines.",
                 faq_2_q: "Q. How are the decision signals (Confidence / Execution Gap) computed?",
