@@ -338,7 +338,7 @@
                 </div>
                 <div class="md:w-2/3 space-y-6 text-gray-400 text-lg leading-relaxed">
                     <p data-key="about_text_1">JackP Oracle은 고위험 의사결정 환경에서 발생하는 <strong class="text-white">인지편향과 판단 흔들림</strong>을 관측·해석하는 Decision Intelligence Lab입니다.</p>
-                    <p data-key="about_text_2">기존의 전략 도구들이 "수학적 정답(GTO)"을 제공하는 데 집중해왔다면, 우리는 사용자가 그 정답을 실제로 실행하는 과정에서 무너지는 지점을 먼저 봅니다. 핵심 기술인 <strong class="text-white">G‑Tell Detection Engine</strong>은 전략 분석 위에 실시간 행동 신호를 관측하고, 실행 누수가 커지는 구간을 줄여 일관된 실행을 지원합니다.<br><br><span class="text-sm border-l-2 border-white/10 pl-4 py-3 block">G‑Tell은 ‘정답을 알아도 무너지는 순간’을 반응시간·선택 패턴 신호로 포착해 <strong class="text-white">실행 루틴</strong>으로 연결하는 실행 신호 엔진입니다.</span></p>
+                    <p data-key="about_text_2">기존의 전략 도구들이 "기준선(Reference Model)"을 제공하는 데 집중해왔다면, 우리는 사용자가 그 정답을 실제로 실행하는 과정에서 무너지는 지점을 먼저 봅니다. 핵심 기술인 <strong class="text-white">G‑Tell Detection Engine</strong>은 전략 분석 위에 실시간 행동 신호를 관측하고, 실행 누수가 커지는 구간을 줄여 일관된 실행을 지원합니다.<br><br><span class="text-sm border-l-2 border-white/10 pl-4 py-3 block">G‑Tell은 ‘정답을 알아도 무너지는 순간’을 반응시간·선택 패턴 신호로 포착해 <strong class="text-white">실행 루틴</strong>으로 연결하는 실행 신호 엔진입니다.</span></p>
                     <p data-key="about_text_3">엔진은 인터페이스 상호작용에서 발생하는 <strong class="text-white">멈춤 시간(dwell time), 클릭 타이밍·패턴</strong> 같은 신호를 바탕으로 의사결정 상태를 해석하고, 필요한 경우 <strong class="text-white">안정화 루틴</strong>과 다음 액션 가이드를 제시합니다.</p>
                     <p class="text-sm border-l-2 border-white/20 pl-4 text-gray-500 mt-4" data-key="about_text_4">장기적으로 JackP Oracle은 마인드 스포츠에서 축적한 행동 데이터와 AI 기술을 확장하여, Behavioral Finance 기반 트레이딩 심리 분석 및 기업 의사결정 코칭 영역으로 진출합니다.</p>
                 </div>
@@ -375,14 +375,14 @@
                 <div class="tilt-card glass-panel rounded-2xl overflow-hidden group cursor-pointer" data-aos="fade-up">
                     <div class="h-48 bg-gray-900 relative overflow-hidden tilt-content">
                         <div class="absolute top-4 left-4 bg-jackp-primary/20 text-jackp-primary text-xs font-bold px-3 py-1 rounded-full z-10 backdrop-blur-sm border border-jackp-primary/30">ENGINE 01</div>
-                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536215/17.gtoengine_rcwbqf.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="GTO Engine">
+                        <img src="https://res.cloudinary.com/dgoubfc7q/image/upload/v1765536215/17.gtoengine_rcwbqf.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 object-top scale-110 md:scale-105" alt="Reference Logic Layer">
                     </div>
                     <div class="p-8 tilt-content">
-                        <h4 class="text-xl font-bold text-white mb-3">GTO Engine (Logic)</h4>
-                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng1_desc">최적 전략의 기준선을 세웁니다. 이 엔진은 실행 붕괴를 측정할 기준선을 제공하기 위한 레이어입니다.</p>
+                        <h4 class="text-xl font-bold text-white mb-3">Reference Logic Layer</h4>
+                        <p class="text-sm text-gray-400 mb-4 h-16" data-key="eng1_desc">의사결정의 기준선을 세웁니다. 이 레이어는 실행 패턴을 측정·비교하기 위한 참조 프레임입니다.</p>
                         <div class="pt-4 border-t border-white/5 text-xs text-gray-500">
                             <strong class="text-jackp-primary block mb-1">OUTPUT</strong>
-                            <span data-key="eng1_out">판단의 뼈대가 되는 '기준 플레이 모델'과 비교 프레임.</span>
+                            <span data-key="eng1_out">판단의 뼈대가 되는 '참조 플레이 모델'과 비교 프레임.</span>
                         </div>
                     </div>
                 </div>
@@ -962,15 +962,15 @@
                 btn_learn: "Learn More",
                 about_label: "Who We Are",
                 about_text_1: "JackP Oracle은 고위험 의사결정 환경에서 발생하는 <strong class=\"text-white\">인지편향과 판단 흔들림</strong>을 관측·해석하는 Decision Intelligence Lab입니다.",
-                about_text_2: "기존의 전략 도구들이 \"수학적 정답(GTO)\"을 제공하는 데 집중해왔다면, 우리는 사용자가 그 정답을 실제로 실행하는 과정에서 무너지는 지점을 먼저 봅니다. 핵심 기술인 <strong class=\"text-white\">G‑Tell Detection Engine</strong>은 전략 분석 위에 실시간 행동 신호를 관측하고, 실행 누수가 커지는 구간을 줄여 일관된 실행을 지원합니다.<br><br><span class=\"text-sm border-l-2 border-white/10 pl-4 py-3 block\">G‑Tell은 ‘정답을 알아도 무너지는 순간’을 반응시간·선택 패턴 신호로 포착해 <strong class=\"text-white\">실행 루틴</strong>으로 연결하는 실행 신호 엔진입니다.</span>",
+                about_text_2: "기존의 전략 도구들이 \"기준선(Reference Model)\"을 제공하는 데 집중해왔다면, 우리는 사용자가 그 정답을 실제로 실행하는 과정에서 무너지는 지점을 먼저 봅니다. 핵심 기술인 <strong class=\"text-white\">G‑Tell Detection Engine</strong>은 전략 분석 위에 실시간 행동 신호를 관측하고, 실행 누수가 커지는 구간을 줄여 일관된 실행을 지원합니다.<br><br><span class=\"text-sm border-l-2 border-white/10 pl-4 py-3 block\">G‑Tell은 ‘정답을 알아도 무너지는 순간’을 반응시간·선택 패턴 신호로 포착해 <strong class=\"text-white\">실행 루틴</strong>으로 연결하는 실행 신호 엔진입니다.</span>",
                 about_text_3: "엔진은 인터페이스 상호작용에서 발생하는 <strong class=\"text-white\">멈춤 시간(dwell time), 클릭 타이밍·패턴</strong> 같은 신호를 바탕으로 의사결정 상태를 해석하고, 필요한 경우 <strong class=\"text-white\">안정화 루틴</strong>과 다음 액션 가이드를 제시합니다.",
                 about_text_4: "장기적으로 JackP Oracle은 마인드 스포츠에서 축적한 행동 데이터와 AI 기술을 확장하여, Behavioral Finance 기반 트레이딩 심리 분석 및 기업 의사결정 코칭 영역으로 진출합니다.",
                 biz_title: "Business Model & Scalability",
                 biz_desc: "JackP Oracle의 주력 제품은 <strong class='text-jackp-light'>클라우드 기반 프리미엄 SaaS 구독 모델</strong>과 <strong class='text-jackp-light'>B2B 엔터프라이즈 라이선스</strong> 형태로 제공됩니다. 초기에는 마인드 스포츠에서 제품 가치를 검증하고, 이후 e스포츠 및 엔터프라이즈 의사결정 영역으로 적용 범위를 확장합니다.",
                 tech_label: "Core Technology",
                 tech_desc: `선택·반응시간·주저·변동성 같은 ‘의사결정 신호’를 측정하고, 실행으로 이어지게 만드는 루틴/피드백 구조를 설계합니다.`,
-                eng1_desc: "최적 전략의 기준선을 세웁니다. 이 엔진은 실행 붕괴를 측정할 기준선을 제공하기 위한 레이어입니다.",
-                eng1_out: "판단의 뼈대가 되는 '기준 플레이 모델'과 비교 프레임.",
+                eng1_desc: "의사결정의 기준선을 세웁니다. 이 레이어는 실행 패턴을 측정·비교하기 위한 참조 프레임입니다.",
+                eng1_out: "판단의 뼈대가 되는 '참조 플레이 모델'과 비교 프레임.",
                 eng2_desc: "\"실력 부족\"이 아니라 \"실행 붕괴\"인지 구분해, 흔들리는 지점을 정확히 포착합니다.",
                 eng2_out: "망설임, 과열, 위축, 회피 등 실행 붕괴 패턴 관측.",
                 eng3_desc: "확신도는 판단 강도를 추정하기 위한 보조 신호입니다. 실력 대비 확신의 차이(Gap)는 개선 우선순위를 보여줍니다.",
@@ -1057,7 +1057,7 @@
                 btn_learn: "Learn More",
                 about_label: "Who We Are",
                 about_text_1: "JackP Oracle is a Decision Intelligence Lab that observes and interprets <strong class=\"text-white\">cognitive biases and decision volatility</strong> in high-stakes decision-making environments.",
-                about_text_2: "While many strategy tools focus on delivering the “mathematically correct answer (GTO),” we focus on where execution breaks down when people try to apply it. Our core technology, the <strong class=\"text-white\">G‑Tell Detection Engine</strong>, observes real-time behavioral signals on top of strategy analysis, reducing execution leakage and supporting consistent decisions.<br><br><span class=\"text-sm border-l-2 border-white/10 pl-4 py-3 block\">G‑Tell captures the moment you “know the answer but still collapse” through reaction-time and choice-pattern signals, then connects it to practical <strong class=\"text-white\">execution routines</strong>.</span>",
+                about_text_2: "While many strategy tools focus on delivering the “baseline reference model,” we focus on where execution breaks down when people try to apply it. Our core technology, the <strong class=\"text-white\">G‑Tell Detection Engine</strong>, observes real-time behavioral signals on top of strategy analysis, reducing execution leakage and supporting consistent decisions.<br><br><span class=\"text-sm border-l-2 border-white/10 pl-4 py-3 block\">G‑Tell captures the moment you “know the answer but still collapse” through reaction-time and choice-pattern signals, then connects it to practical <strong class=\"text-white\">execution routines</strong>.</span>",
                 about_text_3: "The engine interprets decision states using interaction signals such as <strong class=\"text-white\">dwell time and click timing/patterns</strong>, and, when needed, provides <strong class=\"text-white\">stabilization routines</strong> and next-action guidance.",
                 about_text_4: "In the long term, JackP Oracle expands behavioral data and AI technology accumulated in mind sports to enter the fields of trading psychology analysis based on Behavioral Finance and corporate decision-making coaching.",
                 biz_title: "Business Model & Scalability",
