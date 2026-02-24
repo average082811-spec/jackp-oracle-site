@@ -893,7 +893,7 @@
                     </div>
                 </div>
                 <div id="ceo-msg-container"
-                    class="max-h-0 opacity-0 overflow-hidden transition-all duration-700 ease-in-out">
+                    class="opacity-0 overflow-hidden transition-all duration-700 ease-in-out" style="max-height:0">
                     <div class="text-gray-300 leading-relaxed space-y-4 whitespace-pre-line text-sm md:text-base max-w-4xl pt-4 border-t border-white/10"
                         data-key="ceo_msg_body">“우리는 사람을 평가하지 않습니다. 사람이 판단하는 ‘구조’를 관측합니다.”<br /><br />안녕하세요. JackP
                         Oracle
@@ -2632,8 +2632,7 @@ These Terms are governed by the laws of the Republic of Korea. In the event of a
             if (container.classList.contains('active')) {
                 // Collapse
                 container.classList.remove('active');
-                container.style.maxHeight = null;
-                container.classList.add('max-h-0');
+                container.style.maxHeight = '0px';
                 container.classList.remove('opacity-100');
                 container.classList.add('opacity-0');
                 icon.classList.remove('rotate-180');
@@ -2642,10 +2641,9 @@ These Terms are governed by the laws of the Republic of Korea. In the event of a
             } else {
                 // Expand
                 container.classList.add('active');
-                container.classList.remove('max-h-0');
                 container.classList.remove('opacity-0');
                 container.classList.add('opacity-100');
-                container.style.maxHeight = container.scrollHeight + "px";
+                container.style.maxHeight = container.scrollHeight + 'px';
                 icon.classList.add('rotate-180');
                 if (readText) readText.classList.add('hidden');
                 if (closeText) closeText.classList.remove('hidden');
