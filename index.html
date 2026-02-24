@@ -2633,6 +2633,7 @@ These Terms are governed by the laws of the Republic of Korea. In the event of a
                 // Collapse
                 container.classList.remove('active');
                 container.style.maxHeight = null;
+                container.classList.add('max-h-0');
                 container.classList.remove('opacity-100');
                 container.classList.add('opacity-0');
                 icon.classList.remove('rotate-180');
@@ -2641,6 +2642,7 @@ These Terms are governed by the laws of the Republic of Korea. In the event of a
             } else {
                 // Expand
                 container.classList.add('active');
+                container.classList.remove('max-h-0');
                 container.classList.remove('opacity-0');
                 container.classList.add('opacity-100');
                 container.style.maxHeight = container.scrollHeight + "px";
