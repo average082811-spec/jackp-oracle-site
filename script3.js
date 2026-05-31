@@ -385,7 +385,6 @@ if (particleCanvas) {
 
   const drawParticles = (animate = true) => {
     ctx.clearRect(0, 0, width, height);
-    ctx.globalCompositeOperation = "lighter";
 
     particles.forEach((particle) => {
       if (animate) updateParticle(particle);
@@ -393,7 +392,6 @@ if (particleCanvas) {
 
     connectParticles();
     particles.forEach(drawParticle);
-    ctx.globalCompositeOperation = "source-over";
 
     if (animate) {
       frameId = requestAnimationFrame(drawParticles);
