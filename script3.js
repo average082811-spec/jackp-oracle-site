@@ -403,9 +403,27 @@ if (particleCanvas) {
   resizeParticles();
   drawParticles(!reducedMotion);
 
+  // 모바일 첫 로드 viewport 안정화 후 재측정 (canvas pixel 비율 mismatch 차단)
+  setTimeout(() => { resizeParticles(); if (reducedMotion) drawParticles(false); }, 120);
+  setTimeout(() => { resizeParticles(); if (reducedMotion) drawParticles(false); }, 600);
+
+  // hero 영역 자체의 크기 변동 감지 (window resize listener 누락 자리 보완)
+  if (typeof ResizeObserver !== "undefined") {
+    const heroEl = particleCanvas.closest(".hero-alt") || particleCanvas.parentElement;
+    if (heroEl) {
+      new ResizeObserver(() => {
+        resizeParticles();
+        if (reducedMotion) drawParticles(false);
+      }).observe(heroEl);
+    }
+  }
+
   window.addEventListener("resize", () => {
     resizeParticles();
     if (reducedMotion) drawParticles(false);
+  });
+  window.addEventListener("orientationchange", () => {
+    setTimeout(() => { resizeParticles(); if (reducedMotion) drawParticles(false); }, 250);
   });
 
   window.addEventListener("pagehide", () => cancelAnimationFrame(frameId));
