@@ -313,9 +313,11 @@ if (particleCanvas) {
   const resizeParticles = () => {
     const hero = particleCanvas.closest(".hero-alt") || particleCanvas.parentElement;
     const rect = hero.getBoundingClientRect();
-    ratio = Math.min(window.devicePixelRatio || 1, 2);
     width = Math.max(1, Math.floor(rect.width));
     height = Math.max(1, Math.floor(rect.height));
+    // 모바일(좁은 viewport)은 ratio 1로 강제 — internal pixel과 CSS pixel을 1:1로 묶어
+    // 첫 측정 시점 비율 mismatch에 의한 가로 stretch(찌그러짐) 차단.
+    ratio = width < 900 ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     particleCanvas.width = Math.floor(width * ratio);
     particleCanvas.height = Math.floor(height * ratio);
     particleCanvas.style.width = `${width}px`;
