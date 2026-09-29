@@ -1,0 +1,18 @@
+
+.hero{position:relative;isolation:isolate}
+.hero-copy,.brand-cards,.hero-bottom{position:relative;z-index:2}
+.sculpture{position:relative;isolation:isolate}
+.sculpture>img,.sculpture>canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.sculpture>canvas{display:none}
+.sculpture[data-render="canvas"]>canvas{display:block}
+.sculpture[data-render="canvas"]>img{visibility:hidden}
+.sculpture[data-render="mobile"]>img{opacity:var(--logo-opacity,0)}
+#introduction>.hero-scene-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+#introduction>.hero-scene-canvas[hidden]{display:none}
+@keyframes restored-logo-float{0%,100%{translate:0 0}50%{translate:0 -9px}}
+#introduction.logo-assembled .sculpture,#introduction.logo-assembled>.hero-scene-canvas{animation:restored-logo-float 5s ease-in-out infinite}
+#introduction[data-float-paused="true"] .sculpture,#introduction[data-float-paused="true"]>.hero-scene-canvas{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){#introduction.logo-assembled .sculpture,#introduction.logo-assembled>.hero-scene-canvas{animation:none}.sculpture>img{visibility:visible!important;opacity:1!important}}
+
+#introduction>.hero-ambient-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#introduction>.hero-ambient-canvas[hidden]{display:none}

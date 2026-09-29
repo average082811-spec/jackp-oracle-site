@@ -1,0 +1,24 @@
+/* Reference direction: continuous masthead, without separate pill controls. */
+.site-header{position:fixed;inset:0 0 auto;background:transparent;border:0;backdrop-filter:none;transition:background-color .25s,box-shadow .25s}
+.site-header.is-scrolled{background:#081124f2;backdrop-filter:blur(14px);box-shadow:0 1px 0 #ffffff16}
+.site-header .header-inner{width:100%;min-height:90px;padding:0 44px;margin:0;justify-content:flex-start;gap:64px}
+.site-header .wordmark{font-size:23px;font-weight:800;letter-spacing:-.65px;gap:12px;color:#fff}
+.site-header .wordmark img{width:36px;height:36px;filter:brightness(0) invert(1)}
+.site-header nav{gap:43px;align-self:stretch;align-items:center;font-size:17px;font-weight:650}
+.site-header nav a{position:relative;padding:27px 0;color:#edf0f6;letter-spacing:-.3px}
+.site-header nav a::after{content:'';position:absolute;bottom:17px;left:0;width:100%;height:1px;background:#d5bfff;transform:scaleX(0);transform-origin:left;transition:transform .2s}
+.site-header nav a:hover::after,.site-header nav a[aria-current]::after{transform:scaleX(1)}
+.site-header nav a[href="#contact"] span{display:none}
+.hero{padding-top:115px}
+html{scroll-padding-top:105px}
+@media(min-width:1500px){.site-header .header-inner{gap:80px;padding:0 48px}.site-header nav{gap:50px}}
+@media(max-width:900px){.site-header .header-inner{padding:0 5%;gap:38px;min-height:80px}.site-header .wordmark{font-size:20px}.site-header nav{font-size:15px;gap:26px}.hero{padding-top:100px}}
+@media(max-width:600px){.site-header .header-inner{padding:0 5%;min-height:68px;gap:14px;justify-content:space-between}.site-header .wordmark{font-size:14px;gap:7px;letter-spacing:-.4px}.site-header .wordmark img{width:25px;height:25px}.site-header nav{font-size:11px;gap:14px}.site-header nav a{padding:22px 0;white-space:nowrap}.site-header nav a::after{bottom:13px}.hero{padding-top:95px}html{scroll-padding-top:80px}}
+@media(max-width:360px){.site-header .wordmark{font-size:12px}.site-header nav{gap:10px;font-size:10px}.site-header .header-inner{gap:9px}}
+@media(prefers-reduced-motion:reduce){.site-header,.site-header nav a::after{transition:none}}
+
+/* Align masthead with the same 1180px / 90% content grid. */
+.site-header .header-inner{width:min(1180px,90%);margin-inline:auto;padding-inline:0;justify-content:space-between;gap:32px}
+@media(max-width:900px){.site-header .header-inner{width:90%;padding-inline:0;gap:24px}}
+@media(max-width:600px){.site-header .header-inner{width:90%;padding-inline:0;gap:14px}}
+@media(max-width:360px){.site-header .header-inner{gap:9px}}

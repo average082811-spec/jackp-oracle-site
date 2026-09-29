@@ -1,0 +1,76 @@
+/* Selected hero only: deliberate type hierarchy and enclosed brand cards. */
+.company-v6 #introduction .hero-copy h1 {
+  font-size:clamp(34px,3.8vw,54px); line-height:1.32;
+  letter-spacing:-1.8px; font-weight:850; margin-bottom:24px;
+}
+.company-v6 #introduction .hero-copy h1 span:first-child {
+  font-weight:550; color:#e4e8f1;
+}
+.company-v6 #introduction .hero-copy h1 span:last-child {
+  color:#d3bbff; font-weight:900;
+}
+.company-v6 #introduction .company-intro {
+  font-size:14px; line-height:1.95; font-weight:400; color:#bcc9db;
+  max-width:470px; word-break:keep-all;
+}
+#introduction .brand-previews {gap:20px;align-items:stretch;}
+#introduction .brand-previews .brand-preview {
+  padding:10px!important;border:1px solid #758ba440!important;
+  border-radius:14px!important;background:#15243ae8!important;
+  box-shadow:0 12px 30px #00000016!important;overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .25s,border-color .25s,background-color .25s;
+}
+#introduction .brand-previews .brand-preview>img {
+  width:100%;height:145px;object-fit:cover;border-radius:7px;
+  filter:brightness(.97);transform:none;
+}
+#introduction .brand-previews .brand-preview>div {padding:15px 10px 11px;}
+#introduction .brand-previews .brand-preview h2 {
+  margin:0 0 7px;font-size:19px;font-weight:750;line-height:1.4;
+}
+#introduction .brand-previews .brand-preview h2 span {
+  display:grid;place-items:center;width:28px;height:28px;
+  border:1px solid #8296b245;border-radius:50%;font-size:15px;color:#cfb8f9;
+}
+#introduction .brand-previews .brand-preview p {
+  font-size:12px;line-height:1.7;color:#b5c2d4;
+}
+#introduction .brand-previews .brand-preview:hover {
+  transform:translateY(-4px);border-color:#bda3f0!important;background:#1d2c45!important;
+}
+#introduction .brand-previews .brand-preview:focus-visible {
+  outline:3px solid #d3bbff;outline-offset:4px;
+}
+@keyframes selected-heading-arrive {
+  from {opacity:0;transform:translateY(15px);clip-path:inset(0 0 100% 0)}
+  to {opacity:1;transform:translateY(0);clip-path:inset(0)}
+}
+@media(prefers-reduced-motion:no-preference) {
+  #introduction .hero-copy h1 span {animation:selected-heading-arrive .75s cubic-bezier(.2,.7,.2,1) backwards;}
+  #introduction .hero-copy h1 span:last-child {animation-delay:.18s;}
+}
+@media(max-width:700px) {
+  .company-v6 #introduction .hero-copy h1 {font-size:31px;letter-spacing:-1px;line-height:1.4;margin-bottom:15px;}
+  .company-v6 #introduction .company-intro {font-size:12px;}
+  #introduction .brand-previews {gap:8px;}
+  #introduction .brand-previews .brand-preview {padding:6px!important;border-radius:10px!important;}
+  #introduction .brand-previews .brand-preview>img {height:80px;border-radius:5px;}
+  #introduction .brand-previews .brand-preview>div {padding:10px 2px 6px;}
+  #introduction .brand-previews .brand-preview h2 {font-size:12px;letter-spacing:-.4px;margin-bottom:5px;}
+  #introduction .brand-previews .brand-preview h2 span {width:auto;height:auto;border:0;font-size:12px;}
+  #introduction .brand-previews .brand-preview p {font-size:10px;line-height:1.65;}
+}
+@media(prefers-reduced-motion:reduce) {
+  #introduction .hero-copy h1 span {animation:none;}
+  #introduction .brand-previews .brand-preview {transition:none;}
+}
+
+/* v1.7 HQ — 무당스 카드·링크·캡션 가독성 */
+#introduction .brand-caption{font-size:12px;line-height:1.7;color:#8f9bb0}
+.mudangs-profile{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}
+.mudangs-profile .mudangs-visual{width:100%;height:100%;min-height:260px;object-fit:cover;background:#0b0d14}
+.mudangs-profile .brand-heading h3{font-size:28px;margin:0}
+.customer-row>span a{color:#6530c9;text-decoration:underline;text-underline-offset:4px;display:inline-flex;align-items:center;min-height:44px}
+.mudangs-profile .core-work{min-height:0}
+@media(max-width:700px){#introduction .brand-caption{font-size:12px}.mudangs-profile{grid-template-columns:1fr}.mudangs-profile .mudangs-visual{order:-1;min-height:0;aspect-ratio:16/9;height:auto}}
